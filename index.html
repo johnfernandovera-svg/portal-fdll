@@ -1,0 +1,1614 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portal de Documentación de Personal · Francisca de las Llagas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F7F3EA;
+    --bg-alt:#EFE7D3;
+    --paper:#FFFDF8;
+    --ink:#2B2A28;
+    --ink-muted:#726B5E;
+    --wine:#6B1E2B;
+    --wine-dark:#4E1520;
+    --wine-tint:#F4E4E5;
+    --gold:#A9791F;
+    --gold-tint:#F3E7C9;
+    --pine:#3F5B54;
+    --pine-tint:#E1EAE6;
+    --border:#DED2B4;
+    --border-soft:#EAE1CB;
+    --danger:#A23B2E;
+    --shadow: 0 1px 2px rgba(43,42,40,0.06), 0 8px 24px -12px rgba(43,42,40,0.18);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter',system-ui,sans-serif;
+    font-size:15px;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.display{font-family:'Fraunces',serif;font-weight:600;letter-spacing:-0.01em;}
+  .mono{font-family:'JetBrains Mono',monospace;}
+  #app{max-width:960px;margin:0 auto;padding:0 20px 80px;}
+  a{color:var(--wine);}
+
+  /* ---------- Header ---------- */
+  .topbar{
+    background:linear-gradient(180deg,var(--wine) 0%,var(--wine-dark) 100%);
+    color:var(--gold-tint);
+    padding:18px 20px;
+    display:flex;align-items:center;gap:14px;
+    box-shadow:var(--shadow);
+    margin-bottom:28px;
+  }
+  .seal{
+    width:46px;height:46px;border-radius:50%;
+    border:1.5px solid rgba(243,231,201,0.75);
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Fraunces',serif;font-weight:600;font-size:15px;
+    color:#F3E7C9;flex-shrink:0;background:rgba(255,255,255,0.04);
+    letter-spacing:0.02em;
+  }
+  .topbar-text .inst{font-family:'Fraunces',serif;font-weight:600;font-size:17px;color:#FBF4E4;line-height:1.2;}
+  .topbar-text .sub{font-size:12.5px;color:#D9BFC3;margin-top:2px;letter-spacing:0.02em;}
+  .topbar-actions{margin-left:auto;display:flex;gap:8px;}
+  .btn-ghost-top{
+    background:transparent;border:1px solid rgba(243,231,201,0.4);color:#F3E7C9;
+    padding:7px 14px;border-radius:7px;font-size:12.5px;cursor:pointer;font-family:'Inter',sans-serif;font-weight:500;
+  }
+  .btn-ghost-top:hover{background:rgba(255,255,255,0.08);}
+
+  /* ---------- Cards / layout ---------- */
+  .card{
+    background:var(--paper);
+    border:1px solid var(--border-soft);
+    border-radius:12px;
+    padding:28px;
+    box-shadow:var(--shadow);
+    margin-bottom:20px;
+  }
+  .eyebrow{
+    text-transform:uppercase;letter-spacing:0.09em;font-size:11.5px;font-weight:600;
+    color:var(--wine);margin-bottom:6px;
+  }
+  .hero-title{font-size:28px;margin:0 0 10px;color:var(--ink);}
+  .hero-lead{color:var(--ink-muted);font-size:15px;max-width:60ch;margin:0 0 22px;}
+
+  .doors{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  @media(max-width:640px){.doors{grid-template-columns:1fr;}}
+  .door{
+    border:1px solid var(--border);border-radius:12px;padding:22px;
+    background:var(--paper);cursor:pointer;text-align:left;
+    transition:transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+    font-family:'Inter',sans-serif;
+  }
+  .door:hover{transform:translateY(-2px);box-shadow:var(--shadow);border-color:var(--gold);}
+  .door .door-icon{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;font-size:18px;}
+  .door.staff .door-icon{background:var(--wine-tint);color:var(--wine);}
+  .door.admin .door-icon{background:var(--pine-tint);color:var(--pine);}
+  .door h3{margin:0 0 6px;font-size:17px;}
+  .door p{margin:0;color:var(--ink-muted);font-size:13.5px;}
+
+  .doc-list{display:flex;flex-direction:column;gap:10px;margin-top:22px;}
+  .doc-row{display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px solid var(--border-soft);border-radius:9px;background:var(--bg-alt);}
+  .doc-row .num{width:24px;height:24px;border-radius:50%;background:var(--wine);color:#fff;font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'Fraunces',serif;}
+  .doc-row .name{font-weight:600;font-size:13.5px;}
+  .doc-row .desc{font-size:12.5px;color:var(--ink-muted);}
+
+  /* ---------- Steps / progress ---------- */
+  .step-shell{display:grid;grid-template-columns:200px 1fr;gap:22px;}
+  @media(max-width:760px){.step-shell{grid-template-columns:1fr;}}
+  .step-tracker{display:flex;flex-direction:column;gap:2px;}
+  .step-tracker .st{
+    display:flex;align-items:flex-start;gap:10px;padding:10px 8px;border-radius:8px;font-size:12.5px;color:var(--ink-muted);
+  }
+  .step-tracker .st.active{background:var(--wine-tint);color:var(--wine-dark);font-weight:600;}
+  .step-tracker .st.done{color:var(--pine);}
+  .step-tracker .dot{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0;margin-top:1px;font-family:'Fraunces',serif;}
+  .step-tracker .st.active .dot{border-color:var(--wine);background:var(--wine);color:#fff;}
+  .step-tracker .st.done .dot{border-color:var(--pine);background:var(--pine);color:#fff;}
+  @media(max-width:760px){.step-tracker{flex-direction:row;flex-wrap:wrap;} .step-tracker .st span.label{display:none;}}
+
+  .progressbar{height:5px;background:var(--border-soft);border-radius:3px;overflow:hidden;margin-bottom:22px;}
+  .progressbar > div{height:100%;background:linear-gradient(90deg,var(--gold),var(--wine));transition:width .25s ease;}
+
+  /* ---------- Forms ---------- */
+  fieldset{border:1px solid var(--border-soft);border-radius:10px;padding:16px 16px 6px;margin:0 0 18px;}
+  legend{font-family:'Fraunces',serif;font-weight:600;font-size:14.5px;color:var(--wine-dark);padding:0 6px;}
+  label{display:block;font-size:12.5px;font-weight:600;color:var(--ink-muted);margin-bottom:5px;letter-spacing:0.01em;}
+  .field{margin-bottom:14px;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+  @media(max-width:600px){.grid2,.grid3{grid-template-columns:1fr;}}
+  input[type=text],input[type=tel],input[type=email],input[type=date],input[type=number],input[type=password],select,textarea{
+    width:100%;padding:9px 11px;border:1px solid var(--border);border-radius:7px;
+    font-family:'Inter',sans-serif;font-size:14px;color:var(--ink);background:var(--paper);
+  }
+  textarea{resize:vertical;min-height:70px;}
+  input:focus,select:focus,textarea:focus{outline:2px solid var(--gold);outline-offset:1px;border-color:var(--gold);}
+  .hint{font-size:11.5px;color:var(--ink-muted);margin-top:4px;}
+  .req::after{content:" *";color:var(--wine);}
+
+  .radio-row,.check-row{display:flex;gap:16px;flex-wrap:wrap;}
+  .radio-opt,.check-opt{display:flex;align-items:center;gap:7px;font-size:13.5px;font-weight:500;color:var(--ink);}
+  .radio-opt input,.check-opt input{width:15px;height:15px;accent-color:var(--wine);}
+
+  .consent-box{
+    background:var(--bg-alt);border:1px solid var(--border-soft);border-radius:9px;
+    max-height:180px;overflow-y:auto;padding:12px 14px;font-size:12.5px;color:var(--ink-muted);margin-bottom:12px;
+  }
+  .consent-box ol{padding-left:18px;margin:6px 0;}
+  .consent-box li{margin-bottom:6px;}
+  .consent-accept{
+    display:flex;gap:10px;align-items:flex-start;background:var(--gold-tint);border:1px solid #E4CE8C;
+    border-radius:9px;padding:12px 14px;
+  }
+  .consent-accept input{margin-top:3px;width:16px;height:16px;accent-color:var(--wine);flex-shrink:0;}
+  .consent-accept span{font-size:13px;font-weight:600;color:#5B4416;}
+
+  .scan-list{display:flex;flex-direction:column;gap:8px;}
+  .scan-row{
+    display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+    padding:11px 13px;border:1px solid var(--border-soft);border-radius:9px;background:var(--bg-alt);
+  }
+  .scan-info .name{font-weight:600;font-size:13.5px;}
+  .scan-info .desc{font-size:11.5px;color:var(--ink-muted);margin-top:2px;}
+  .scan-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .upload-label{cursor:pointer;margin:0;display:inline-flex;align-items:center;}
+
+  .repeat-item{border:1px solid var(--border-soft);border-radius:9px;padding:14px;margin-bottom:12px;background:var(--bg-alt);position:relative;}
+  .repeat-item .rm{position:absolute;top:10px;right:10px;background:none;border:none;color:var(--wine);cursor:pointer;font-size:12px;font-weight:600;}
+  .add-link{background:none;border:1px dashed var(--border);color:var(--wine-dark);border-radius:8px;padding:9px 12px;font-size:13px;font-weight:600;cursor:pointer;width:100%;}
+  .add-link:hover{background:var(--wine-tint);}
+
+  /* ---------- Buttons ---------- */
+  .btn-row{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:10px;flex-wrap:wrap;}
+  .btn{
+    font-family:'Inter',sans-serif;font-weight:600;font-size:13.5px;border-radius:8px;padding:11px 20px;
+    cursor:pointer;border:1px solid transparent;
+  }
+  .btn-primary{background:var(--wine);color:#fff;}
+  .btn-primary:hover{background:var(--wine-dark);}
+  .btn-secondary{background:var(--paper);color:var(--ink);border-color:var(--border);}
+  .btn-secondary:hover{border-color:var(--ink-muted);}
+  .btn-pine{background:var(--pine);color:#fff;}
+  .btn-pine:hover{background:#2f463f;}
+  .btn-danger{background:transparent;color:var(--danger);border-color:var(--danger);}
+  .btn-danger:hover{background:#FBEDEA;}
+  .btn:disabled{opacity:0.45;cursor:not-allowed;}
+  .btn-sm{padding:6px 12px;font-size:12px;border-radius:6px;}
+
+  .error-msg{background:#FBEDEA;border:1px solid #E9BEB4;color:var(--danger);padding:10px 13px;border-radius:8px;font-size:12.5px;margin-bottom:14px;}
+
+  /* ---------- Badges ---------- */
+  .badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;}
+  .badge.ok{background:var(--pine-tint);color:var(--pine);}
+  .badge.pending{background:var(--gold-tint);color:#7A5A12;}
+  .badge.tag{background:var(--wine-tint);color:var(--wine-dark);}
+
+  /* ---------- Admin table ---------- */
+  .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;align-items:center;}
+  .toolbar input,.toolbar select{padding:8px 11px;border:1px solid var(--border);border-radius:7px;font-size:13px;font-family:'Inter',sans-serif;}
+  table{width:100%;border-collapse:collapse;font-size:13px;}
+  th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:0.05em;color:var(--ink-muted);padding:8px 10px;border-bottom:2px solid var(--border);}
+  td{padding:10px;border-bottom:1px solid var(--border-soft);vertical-align:middle;}
+  tr:hover td{background:var(--bg-alt);}
+  .empty-state{text-align:center;padding:50px 20px;color:var(--ink-muted);}
+  .stat-row{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:20px;}
+  @media(max-width:760px){.stat-row{grid-template-columns:1fr 1fr;}}
+  .stat{background:var(--paper);border:1px solid var(--border-soft);border-radius:10px;padding:14px 16px;}
+  .stat .n{font-family:'Fraunces',serif;font-size:24px;color:var(--wine);}
+  .stat .l{font-size:11.5px;color:var(--ink-muted);text-transform:uppercase;letter-spacing:0.04em;}
+
+  /* ---------- Print document sheet ---------- */
+  .doc-sheet{background:var(--paper);border:1px solid var(--border-soft);border-radius:10px;padding:34px 38px;margin-bottom:22px;}
+  .doc-sheet h2{text-align:center;font-size:16.5px;margin:0 0 4px;letter-spacing:0.01em;}
+  .doc-sheet .doc-sub{text-align:center;font-size:12px;color:var(--ink-muted);margin-bottom:20px;}
+  .doc-sheet h4{font-size:13px;color:var(--wine-dark);border-bottom:1px solid var(--border-soft);padding-bottom:4px;margin:18px 0 8px;text-transform:uppercase;letter-spacing:0.04em;}
+  .kv{display:grid;grid-template-columns:1fr 1fr;gap:4px 16px;font-size:13px;margin-bottom:6px;}
+  .kv .k{color:var(--ink-muted);}
+  .kv .v{font-weight:600;}
+  .doc-sheet ol{font-size:12px;padding-left:20px;color:var(--ink);}
+  .doc-sheet ol li{margin-bottom:5px;}
+  .sig-block{margin-top:34px;display:flex;justify-content:space-between;gap:30px;}
+  .sig-line{flex:1;border-top:1px solid var(--ink);padding-top:6px;font-size:11.5px;text-align:center;color:var(--ink-muted);}
+  .print-only{display:none;}
+  @media print{
+    .no-print{display:none !important;}
+    .print-only{display:block;}
+    body{background:#fff;}
+    #app{max-width:100%;padding:0;}
+    .doc-sheet{box-shadow:none;border:none;page-break-after:always;padding:10px 6px;}
+  }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+
+/* ============================================================
+   PORTAL DE DOCUMENTACIÓN DE PERSONAL
+   Unidad Educativa Particular "Francisca de las Llagas"
+   ============================================================ */
+
+const TIPOS_PERSONAL = ["Directivo","Docente","Administrativo","De Servicio"];
+const MESES = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+const DOC_TYPES = [
+  {key:"hojaVida", label:"Hoja de Vida"},
+  {key:"aviso", label:"Aviso de Privacidad"},
+  {key:"consentimiento", label:"Consentimiento Informado"},
+  {key:"acta", label:"Acta de Compromiso"}
+];
+const SOPORTE_TYPES = [
+  {key:"cedula", label:"Cédula de identidad"},
+  {key:"titulos", label:"Títulos de tercer o cuarto nivel (si aplica)"},
+  {key:"senescyt", label:"Registro(s) de Senescyt (si aplica)"},
+  {key:"cursos", label:"Cursos y capacitaciones"},
+  {key:"referencias", label:"Referencias personales"}
+];
+const MAX_SCAN_BYTES = 4 * 1024 * 1024; // 4 MB por archivo
+const CARGOS_POR_TIPO = {
+  "Directivo": ["Rector/a","Vicerrector/a","Inspector/a General"],
+  "Docente": ["Docente"],
+  "Administrativo": ["Dep. Legal","DECE","Dep. Médico","Dep. Dental","Secretaría","Colecturía","Dep. Sistemas","Dep. Contabilidad","Dep. Inspección","Biblioteca"],
+  "De Servicio": ["Apoyo"]
+};
+function cargoOptionsHTML(tipo, selected){
+  const list = CARGOS_POR_TIPO[tipo] || [];
+  return list.map(c=>`<option value="${esc(c)}" ${selected===c?'selected':''}>${esc(c)}</option>`).join("");
+}
+
+let state = {
+  screen: "landing",
+  cedulaActiva: null,
+  record: null,       // borrador en edición
+  adminAuthed: false,
+  adminList: [],
+  adminFilterTipo: "Todos",
+  adminFilterEstado: "Todos",
+  adminSearch: "",
+  adminDetailCedula: null,
+  loading: false,
+  saveNotice: false
+};
+
+function todayISO(){ return new Date().toISOString().slice(0,10); }
+function fmtDate(iso){
+  if(!iso) return "____ /____ /______";
+  const [y,m,d] = iso.split("-");
+  return `${d} / ${m} / ${y}`;
+}
+function esc(s){
+  if(s===undefined||s===null) return "";
+  return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+function blank(v,ph){ return (v && String(v).trim().length) ? esc(v) : `<span style="color:#B8AF9A">${ph||"— sin dato —"}</span>`; }
+
+function emptyRecord(cedula){
+  return {
+    cedula: cedula,
+    meta:{ creado: todayISO(), actualizado: todayISO(), completo:false, enviado:false },
+    identidad:{ nombresApellidos:"", tipoPersonal:"", cargoEspecifico:"", correoInstitucional:"", celular:"" },
+    hojaVida:{
+      perfilProfesional:"", nacionalidad:"Ecuatoriana", estadoCivil:"", telConvencional:"", telCelular:"", correoPersonal:"",
+      ciudad:"", parroquia:"", barrio:"", sector:"", callePrincipal:"", calleSecundaria:"", numeroCasa:"", referenciaUbicacion:"",
+      eduSuperior:[{titulo:"",institucion:"",senescyt:"",anio:""}],
+      eduSecundaria:{titulo:"",institucion:"",anio:""},
+      eduPrimaria:{institucion:""},
+      experiencia:[{institucion:"",cargo:"",mesInicio:"",anioInicio:"",mesFin:"",anioFin:"",funciones:"",motivoSalida:""}],
+      cursos:[{nombre:"",institucion:"",anio:"",horas:""},{nombre:"",institucion:"",anio:"",horas:""},{nombre:"",institucion:"",anio:"",horas:""}],
+      idiomas:"", herramientas:"",
+      refLaborales:[{nombre:"",cargo:"",institucion:"",telefono:""},{nombre:"",cargo:"",institucion:"",telefono:""}],
+      refPersonales:[{nombre:"",relacion:"",parentesco:"",telefono:""},{nombre:"",relacion:"",parentesco:"",telefono:""}],
+      consentimientoLopdp:false, fechaFirma: todayISO()
+    },
+    acta:{ correoInstitucional:"", whatsapp:"", acepta:false, fecha: todayISO() },
+    aviso:{ cargo:"", acepta:false, fecha: todayISO() },
+    consentimiento:{ autorizaImagen:"", autorizaSalud:"", acepta:false, fecha: todayISO() },
+    escaneos:{ hojaVida:null, acta:null, aviso:null, consentimiento:null },
+    soportes:{ cedula:[], titulos:[], senescyt:[], cursos:[], referencias:[] }
+  };
+}
+
+function normalizeRecord(r){
+  if(!r) return r;
+  if(!r.escaneos) r.escaneos = { hojaVida:null, acta:null, aviso:null, consentimiento:null };
+  DOC_TYPES.forEach(d=>{ if(r.escaneos[d.key]===undefined) r.escaneos[d.key] = null; });
+  if(!r.soportes) r.soportes = {};
+  SOPORTE_TYPES.forEach(s=>{ if(!Array.isArray(r.soportes[s.key])) r.soportes[s.key] = []; });
+  if(r.identidad && r.identidad.cargoEspecifico===undefined) r.identidad.cargoEspecifico = "";
+  if(r.hojaVida){
+    const sup = r.hojaVida.eduSuperior;
+    if(sup && !Array.isArray(sup)) r.hojaVida.eduSuperior = [sup];
+    if(!sup) r.hojaVida.eduSuperior = [{titulo:"",institucion:"",senescyt:"",anio:""}];
+  }
+  return r;
+}
+
+/* ---------------- Storage helpers (Google Apps Script como API vía fetch) ---------------- */
+const API_URL = "PON_AQUI_TU_URL_DE_APPS_SCRIPT/exec"; // <-- reemplaza esto con tu URL real (termina en /exec)
+
+function gsRun(fnName, ...args){
+  return fetch(API_URL, {
+    method: "POST",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body: JSON.stringify({ action: fnName, args: args })
+  }).then(r => r.json());
+}
+async function saveRecord(rec){
+  rec.meta.actualizado = todayISO();
+  try{
+    const res = await gsRun('guardarEmpleado', rec);
+    return !!(res && res.ok);
+  }catch(e){ console.error("Error guardando", e); return false; }
+}
+async function loadRecord(cedula){
+  try{
+    const rec = await gsRun('obtenerEmpleado', cedula);
+    return rec ? normalizeRecord(rec) : null;
+  }catch(e){ return null; }
+}
+async function deleteRecord(cedula){
+  try{ await gsRun('eliminarEmpleado', cedula); return true; }
+  catch(e){ return false; }
+}
+async function listAllRecords(){
+  try{
+    const list = await gsRun('listarEmpleados');
+    return (list||[]).map(normalizeRecord).sort((a,b)=> (b.meta.actualizado||"").localeCompare(a.meta.actualizado||""));
+  }catch(e){ return []; }
+}
+
+function isRecordComplete(r){
+  return !!(r.hojaVida.consentimientoLopdp && r.acta.acepta && r.aviso.acepta && r.consentimiento.acepta
+    && r.identidad.nombresApellidos && r.identidad.tipoPersonal);
+}
+
+/* ---------------- App shell / navigation ---------------- */
+function go(screen, extra){
+  state.screen = screen;
+  Object.assign(state, extra||{});
+  render();
+  window.scrollTo({top:0,behavior:"instant"});
+}
+
+function render(){
+  const app = document.getElementById("app");
+  let html = "";
+  if(state.screen !== "print-doc"){
+    html += topbar();
+  }
+  switch(state.screen){
+    case "landing": html += screenLanding(); break;
+    case "staff-step": html += screenStaffStep(); break;
+    case "staff-done": html += screenStaffDone(); break;
+    case "print-doc": html += screenPrint(); break;
+    case "admin-gate": html += screenAdminGate(); break;
+    case "admin-dashboard": html += screenAdminDashboard(); break;
+    case "admin-detail": html += screenAdminDetail(); break;
+    default: html += screenLanding();
+  }
+  app.innerHTML = html;
+  afterRender();
+}
+
+function topbar(){
+  return `
+  <div class="topbar no-print">
+    <div class="seal">FdLL</div>
+    <div class="topbar-text">
+      <div class="inst">Francisca de las Llagas</div>
+      <div class="sub">Portal de Documentación de Personal · 2026–2027</div>
+    </div>
+    <div class="topbar-actions">
+      ${state.screen!=="landing" ? `<button class="btn-ghost-top" onclick="confirmExit()">Inicio</button>`:""}
+      ${state.screen.startsWith("admin") ? `<button class="btn-ghost-top" onclick="go('landing')">Salir</button>`:""}
+    </div>
+  </div>`;
+}
+function confirmExit(){
+  if(state.screen.startsWith("staff") && !state.record?.meta?.enviado){
+    if(!confirm("Tu progreso se guarda automáticamente. ¿Salir al inicio?")) return;
+  }
+  go("landing", {record:null, cedulaActiva:null});
+}
+
+
+/* ================= LANDING ================= */
+function screenLanding(){
+  return `
+  <div class="card">
+    <div class="eyebrow">Recursos Humanos · Departamento Legal</div>
+    <h1 class="hero-title">Documentación digital de personal</h1>
+    <p class="hero-lead">Cada miembro del personal directivo, docente, administrativo y de servicio completa aquí, de forma digital, los documentos requeridos para el año lectivo 2026–2027. Los datos quedan guardados de forma automática mientras avanzas.</p>
+    <div class="doors">
+      <button class="door staff" onclick="go('staff-step',{step:0, record:null, cedulaActiva:null})">
+        <div class="door-icon">P</div>
+        <h3>Soy personal del plantel</h3>
+        <p>Ingresa tu cédula para comenzar o continuar tus documentos.</p>
+      </button>
+      <button class="door admin" onclick="go('admin-gate')">
+        <div class="door-icon">A</div>
+        <h3>Área administrativa</h3>
+        <p>Panel del Departamento Legal / RRHH: revisar, imprimir, exportar y validar registros.</p>
+      </button>
+    </div>
+    <div class="doc-list">
+      <div class="doc-row"><div class="num">1</div><div><div class="name">Hoja de Vida</div><div class="desc">Datos personales, formación, experiencia y referencias</div></div></div>
+      <div class="doc-row"><div class="num">2</div><div><div class="name">Aviso de Privacidad</div><div class="desc">Información sobre el tratamiento de datos personales (LOPDP)</div></div></div>
+      <div class="doc-row"><div class="num">3</div><div><div class="name">Consentimiento Informado</div><div class="desc">Datos personales, control biométrico y videovigilancia laboral</div></div></div>
+      <div class="doc-row"><div class="num">4</div><div><div class="name">Acta de Compromiso Institucional</div><div class="desc">22 compromisos del Código de Convivencia y reglamentos internos</div></div></div>
+    </div>
+  </div>`;
+}
+
+/* ================= STAFF WIZARD ================= */
+const STEP_LABELS = ["Identificación","Hoja de Vida","Aviso de Privacidad","Consentimiento Informado","Acta de Compromiso","Resumen"];
+
+function screenStaffStep(){
+  const step = state.step ?? 0;
+  let inner = "";
+  if(step===0) inner = stepIdentidad();
+  else if(step===1) inner = stepHojaVida();
+  else if(step===2) inner = stepAviso();
+  else if(step===3) inner = stepConsentimiento();
+  else if(step===4) inner = stepActa();
+  else if(step===5) inner = stepResumen();
+
+  const pct = Math.round((step/5)*100);
+  return `
+  <div class="progressbar no-print"><div style="width:${pct}%"></div></div>
+  <div class="step-shell">
+    <div class="step-tracker no-print">
+      ${STEP_LABELS.map((l,i)=>`
+        <div class="st ${i===step?'active':(i<step?'done':'')}">
+          <div class="dot">${i<step?'✓':i+1}</div><span class="label">${l}</span>
+        </div>`).join("")}
+    </div>
+    <div>${inner}</div>
+  </div>`;
+}
+
+function stepIdentidad(){
+  const r = state.cedulaInput || {cedula:"",nombresApellidos:"",tipoPersonal:"",cargoEspecifico:"",correoInstitucional:"",celular:""};
+  return `
+  <div class="card">
+    <div class="eyebrow">Paso 1 de 6</div>
+    <h2 style="margin-top:0">¿Quién eres?</h2>
+    <p class="hero-lead" style="margin-bottom:18px">Ingresa tu cédula para comenzar tus documentos o continuar donde los dejaste. No necesitas usuario ni contraseña.</p>
+    <div id="id-error"></div>
+    <div class="grid2">
+      <div class="field"><label class="req">Cédula de ciudadanía o pasaporte</label>
+        <input type="text" id="f-cedula" maxlength="20" value="${esc(r.cedula)}" placeholder="Ej. 1712345678" oninput="this.value=this.value.toUpperCase()">
+        <div class="hint">Solo números (o letras si es pasaporte), sin espacios ni guiones.</div></div>
+      <div class="field"><label class="req">Apellidos y nombres completos</label>
+        <input type="text" id="f-nombres" value="${esc(r.nombresApellidos)}" placeholder="Ej. Pérez Solís María José"></div>
+    </div>
+    <div class="field"><label class="req">Tipo de personal</label>
+      <div class="radio-row">
+        ${TIPOS_PERSONAL.map(t=>`<label class="radio-opt"><input type="radio" name="tipo" value="${t}" ${r.tipoPersonal===t?'checked':''} onchange="onTipoPersonalChange()"> ${t}</label>`).join("")}
+      </div>
+    </div>
+    <div class="field" id="cargo-wrap" style="${r.tipoPersonal?'':'display:none'}">
+      <label class="req">Cargo específico</label>
+      <select id="f-cargo">
+        ${r.tipoPersonal ? cargoOptionsHTML(r.tipoPersonal, r.cargoEspecifico) : ''}
+      </select>
+    </div>
+    <div class="grid2">
+      <div class="field"><label>Correo institucional</label>
+        <input type="email" id="f-correoinst" value="${esc(r.correoInstitucional)}" placeholder="nombre@fdll.edu.ec"></div>
+      <div class="field"><label>Celular personal</label>
+        <input type="tel" id="f-celular" value="${esc(r.celular)}" placeholder="09XXXXXXXX"></div>
+    </div>
+    <div class="btn-row">
+      <span></span>
+      <button class="btn btn-primary" onclick="startOrResume()">Comenzar / Continuar →</button>
+    </div>
+  </div>`;
+}
+
+function onTipoPersonalChange(){
+  const tipoEl = document.querySelector('input[name="tipo"]:checked');
+  const wrap = document.getElementById('cargo-wrap');
+  const select = document.getElementById('f-cargo');
+  if(!tipoEl){ wrap.style.display='none'; select.innerHTML=''; return; }
+  wrap.style.display='';
+  select.innerHTML = cargoOptionsHTML(tipoEl.value, '');
+}
+
+async function startOrResume(){
+  const cedula = document.getElementById("f-cedula").value.trim().replace(/[^0-9A-Za-z]/g,"").toUpperCase();
+  const nombres = document.getElementById("f-nombres").value.trim();
+  const tipoEl = document.querySelector('input[name="tipo"]:checked');
+  const cargoEl = document.getElementById("f-cargo");
+  const cargoEspecifico = (tipoEl && cargoEl) ? cargoEl.value : "";
+  const correoInst = document.getElementById("f-correoinst").value.trim();
+  const celular = document.getElementById("f-celular").value.trim();
+
+  if(!cedula || !nombres || !tipoEl || !cargoEspecifico){
+    document.getElementById("id-error").innerHTML = `<div class="error-msg">Completa cédula, nombres, tipo de personal y cargo específico para continuar.</div>`;
+    return;
+  }
+  state.cedulaInput = {cedula, nombresApellidos:nombres, tipoPersonal:tipoEl.value, cargoEspecifico, correoInstitucional:correoInst, celular};
+
+  let rec = await loadRecord(cedula);
+  if(!rec){
+    rec = emptyRecord(cedula);
+  }
+  rec.identidad.nombresApellidos = nombres;
+  rec.identidad.tipoPersonal = tipoEl.value;
+  rec.identidad.cargoEspecifico = cargoEspecifico;
+  rec.identidad.correoInstitucional = correoInst || rec.identidad.correoInstitucional;
+  rec.identidad.celular = celular || rec.identidad.celular;
+  rec.aviso.cargo = cargoEspecifico;
+  if(!rec.hojaVida.apellidosNombres) rec.hojaVida.apellidosNombres = nombres;
+  if(!rec.hojaVida.telCelular) rec.hojaVida.telCelular = celular;
+  if(!rec.acta.correoInstitucional) rec.acta.correoInstitucional = correoInst;
+  if(!rec.acta.whatsapp) rec.acta.whatsapp = celular;
+
+  state.record = rec;
+  state.cedulaActiva = cedula;
+  await saveRecord(rec);
+  if(rec.meta.completo){
+    go("staff-done");
+  }else{
+    go("staff-step",{step:1});
+  }
+}
+
+function stepHojaVida(){
+  const hv = state.record.hojaVida;
+  const exp = hv.experiencia;
+  return `
+  <div class="card">
+    <div class="eyebrow">Paso 2 de 6 · Documento 1</div>
+    <h2 style="margin-top:0">Hoja de Vida</h2>
+
+    <fieldset><legend>I. Perfil profesional</legend>
+      <div class="field"><label>Breve resumen profesional, fortalezas y objetivo laboral</label>
+        <textarea id="hv-perfil" rows="3">${esc(hv.perfilProfesional)}</textarea></div>
+    </fieldset>
+
+    <fieldset><legend>II. Datos personales</legend>
+      <div class="grid2">
+        <div class="field"><label>Nacionalidad</label><input type="text" id="hv-nacionalidad" value="${esc(hv.nacionalidad)}"></div>
+        <div class="field"><label>Estado civil</label>
+          <select id="hv-estadocivil">
+            ${["","Soltero/a","Casado/a","Divorciado/a","Viudo/a","Unión de hecho"].map(o=>`<option ${hv.estadoCivil===o?'selected':''}>${o}</option>`).join("")}
+          </select></div>
+      </div>
+      <div class="grid3">
+        <div class="field"><label>Teléfono convencional</label><input type="tel" id="hv-telconv" value="${esc(hv.telConvencional)}"></div>
+        <div class="field"><label>Teléfono celular</label><input type="tel" id="hv-telcel" value="${esc(hv.telCelular)}"></div>
+        <div class="field"><label>Correo electrónico personal</label><input type="email" id="hv-correopers" value="${esc(hv.correoPersonal)}"></div>
+      </div>
+    </fieldset>
+
+    <fieldset><legend>III. Dirección exacta del domicilio</legend>
+      <div class="grid3">
+        <div class="field"><label>Ciudad</label><input type="text" id="hv-ciudad" value="${esc(hv.ciudad)}"></div>
+        <div class="field"><label>Parroquia</label><input type="text" id="hv-parroquia" value="${esc(hv.parroquia)}"></div>
+        <div class="field"><label>Barrio</label><input type="text" id="hv-barrio" value="${esc(hv.barrio)}"></div>
+      </div>
+      <div class="grid3">
+        <div class="field"><label>Sector</label><input type="text" id="hv-sector" value="${esc(hv.sector)}"></div>
+        <div class="field"><label>Calle principal</label><input type="text" id="hv-callep" value="${esc(hv.callePrincipal)}"></div>
+        <div class="field"><label>Calle secundaria</label><input type="text" id="hv-callesec" value="${esc(hv.calleSecundaria)}"></div>
+      </div>
+      <div class="grid2">
+        <div class="field"><label>Nomenclatura o número de casa</label><input type="text" id="hv-numcasa" value="${esc(hv.numeroCasa)}"></div>
+        <div class="field"><label>Referencia de ubicación</label><input type="text" id="hv-refubic" value="${esc(hv.referenciaUbicacion)}"></div>
+      </div>
+    </fieldset>
+
+    <fieldset><legend>IV. Formación académica</legend>
+      <p class="hint" style="margin-top:-4px">Educación superior (universidad / instituto superior)</p>
+      <div id="sup-list">
+        ${hv.eduSuperior.map((s,i)=>`
+        <div class="repeat-item">
+          ${hv.eduSuperior.length>1?`<button class="rm" onclick="removeSup(${i})">Eliminar</button>`:""}
+          <div class="grid2">
+            <div class="field"><label>Título obtenido</label><input type="text" data-sup="${i}" data-f="titulo" value="${esc(s.titulo)}"></div>
+            <div class="field"><label>Universidad / Instituto</label><input type="text" data-sup="${i}" data-f="institucion" value="${esc(s.institucion)}"></div>
+          </div>
+          <div class="grid2">
+            <div class="field"><label>Registro Senescyt (si aplica)</label><input type="text" data-sup="${i}" data-f="senescyt" value="${esc(s.senescyt)}"></div>
+            <div class="field"><label>Año de graduación</label><input type="text" data-sup="${i}" data-f="anio" value="${esc(s.anio)}"></div>
+          </div>
+        </div>`).join("")}
+      </div>
+      <button class="add-link" onclick="addSup()">+ Añadir otro título de Educación superior</button>
+      <p class="hint" style="margin-top:16px">Educación secundaria (colegio)</p>
+      <div class="grid3">
+        <div class="field"><label>Título obtenido</label><input type="text" id="hv-sect" value="${esc(hv.eduSecundaria.titulo)}"></div>
+        <div class="field"><label>Institución / Colegio</label><input type="text" id="hv-seci" value="${esc(hv.eduSecundaria.institucion)}"></div>
+        <div class="field"><label>Año de finalización</label><input type="text" id="hv-seca" value="${esc(hv.eduSecundaria.anio)}"></div>
+      </div>
+      <p class="hint">Educación primaria (escuela)</p>
+      <div class="field"><label>Escuela / Unidad Educativa</label><input type="text" id="hv-pri" value="${esc(hv.eduPrimaria.institucion)}"></div>
+    </fieldset>
+
+    <fieldset><legend>V. Experiencia laboral</legend>
+      <p class="hint" style="margin-top:-4px">Detalla tus últimas experiencias, iniciando por la más reciente.</p>
+      <div id="exp-list">
+        ${exp.map((e,i)=>`
+        <div class="repeat-item">
+          ${exp.length>1?`<button class="rm" onclick="removeExp(${i})">Eliminar</button>`:""}
+          <div class="field"><label>Institución / Empresa</label><input type="text" data-exp="${i}" data-f="institucion" value="${esc(e.institucion)}"></div>
+          <div class="field"><label>Cargo desempeñado</label><input type="text" data-exp="${i}" data-f="cargo" value="${esc(e.cargo)}"></div>
+          <div class="grid2">
+            <div class="field"><label>Desde (mes / año)</label>
+              <div style="display:flex;gap:8px">
+                <select data-exp="${i}" data-f="mesInicio" style="flex:1">${["",...MESES].map(m=>`<option ${e.mesInicio===m?'selected':''}>${m}</option>`).join("")}</select>
+                <input type="text" data-exp="${i}" data-f="anioInicio" value="${esc(e.anioInicio)}" placeholder="Año" style="width:90px">
+              </div></div>
+            <div class="field"><label>Hasta (mes / año)</label>
+              <div style="display:flex;gap:8px">
+                <select data-exp="${i}" data-f="mesFin" style="flex:1">${["",...MESES,"Actualidad"].map(m=>`<option ${e.mesFin===m?'selected':''}>${m}</option>`).join("")}</select>
+                <input type="text" data-exp="${i}" data-f="anioFin" value="${esc(e.anioFin)}" placeholder="Año" style="width:90px">
+              </div></div>
+          </div>
+          <div class="field"><label>Funciones y logros principales</label><textarea data-exp="${i}" data-f="funciones" rows="2">${esc(e.funciones)}</textarea></div>
+          <div class="field"><label>Motivo de la salida</label><input type="text" data-exp="${i}" data-f="motivoSalida" value="${esc(e.motivoSalida)}"></div>
+        </div>`).join("")}
+      </div>
+      <button class="add-link" onclick="addExp()">+ Añadir otra experiencia laboral</button>
+    </fieldset>
+
+    <fieldset><legend>VI. Cursos y capacitaciones</legend>
+      <p class="hint" style="margin-top:-4px">Talleres, seminarios o certificaciones de los últimos tres años (opcional).</p>
+      ${hv.cursos.map((c,i)=>`
+      <div class="repeat-item">
+        <div class="field"><label>Nombre del curso</label><input type="text" data-cur="${i}" data-f="nombre" value="${esc(c.nombre)}"></div>
+        <div class="grid3">
+          <div class="field"><label>Institución / aval</label><input type="text" data-cur="${i}" data-f="institucion" value="${esc(c.institucion)}"></div>
+          <div class="field"><label>Año</label><input type="text" data-cur="${i}" data-f="anio" value="${esc(c.anio)}"></div>
+          <div class="field"><label>Duración (horas)</label><input type="text" data-cur="${i}" data-f="horas" value="${esc(c.horas)}"></div>
+        </div>
+      </div>`).join("")}
+    </fieldset>
+
+    <fieldset><legend>VII. Idiomas y herramientas tecnológicas</legend>
+      <div class="grid2">
+        <div class="field"><label>Idiomas (idioma — nivel)</label><input type="text" id="hv-idiomas" value="${esc(hv.idiomas)}" placeholder="Ej. Español (nativo), Inglés (intermedio)"></div>
+        <div class="field"><label>Sistemas / herramientas digitales</label><input type="text" id="hv-herramientas" value="${esc(hv.herramientas)}" placeholder="Ej. Microsoft Office, plataformas educativas"></div>
+      </div>
+    </fieldset>
+
+    <fieldset><legend>VIII. Referencias laborales (dos últimos trabajos)</legend>
+      ${hv.refLaborales.map((rl,i)=>`
+      <div class="repeat-item">
+        <div class="grid2">
+          <div class="field"><label>Nombre completo</label><input type="text" data-rl="${i}" data-f="nombre" value="${esc(rl.nombre)}"></div>
+          <div class="field"><label>Cargo</label><input type="text" data-rl="${i}" data-f="cargo" value="${esc(rl.cargo)}"></div>
+        </div>
+        <div class="grid2">
+          <div class="field"><label>Institución</label><input type="text" data-rl="${i}" data-f="institucion" value="${esc(rl.institucion)}"></div>
+          <div class="field"><label>Teléfono de contacto</label><input type="tel" data-rl="${i}" data-f="telefono" value="${esc(rl.telefono)}"></div>
+        </div>
+      </div>`).join("")}
+    </fieldset>
+
+    <fieldset><legend>IX. Referencias personales (mínimo dos)</legend>
+      ${hv.refPersonales.map((rp,i)=>`
+      <div class="repeat-item">
+        <div class="grid2">
+          <div class="field"><label>Nombre completo</label><input type="text" data-rp="${i}" data-f="nombre" value="${esc(rp.nombre)}"></div>
+          <div class="field"><label>Relación</label><input type="text" data-rp="${i}" data-f="relacion" value="${esc(rp.relacion)}"></div>
+        </div>
+        <div class="grid2">
+          <div class="field"><label>Parentesco</label><input type="text" data-rp="${i}" data-f="parentesco" value="${esc(rp.parentesco)}"></div>
+          <div class="field"><label>Teléfono de contacto</label><input type="tel" data-rp="${i}" data-f="telefono" value="${esc(rp.telefono)}"></div>
+        </div>
+      </div>`).join("")}
+    </fieldset>
+
+    <fieldset><legend>X. Consentimiento (LOPDP)</legend>
+      <div class="consent-box">De conformidad con la Ley Orgánica de Protección de Datos Personales (LOPDP), autorizo de manera libre, previa, expresa e informada que los datos contenidos en esta Hoja de Vida sean tratados exclusivamente para la evaluación de mi perfil profesional; el Plantel Educativo garantiza la confidencialidad de la información y el ejercicio de mis derechos de acceso, rectificación, actualización y eliminación (Derechos ARCO), conforme a la normativa vigente.</div>
+      <label class="consent-accept"><input type="checkbox" id="hv-consent" ${hv.consentimientoLopdp?'checked':''}>
+        <span>Autorizo el tratamiento de los datos de mi Hoja de Vida conforme a lo descrito.</span></label>
+    </fieldset>
+
+    <div id="hv-error"></div>
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="saveAndGo(1,0)">← Atrás</button>
+      <button class="btn btn-primary" onclick="saveAndGo(1,2)">Guardar y continuar →</button>
+    </div>
+  </div>`;
+}
+
+function addExp(){
+  state.record.hojaVida.experiencia.push({institucion:"",cargo:"",mesInicio:"",anioInicio:"",mesFin:"",anioFin:"",funciones:"",motivoSalida:""});
+  collectHojaVida(); render();
+}
+function removeExp(i){
+  collectHojaVida();
+  state.record.hojaVida.experiencia.splice(i,1);
+  render();
+}
+function addSup(){
+  collectHojaVida();
+  state.record.hojaVida.eduSuperior.push({titulo:"",institucion:"",senescyt:"",anio:""});
+  render();
+}
+function removeSup(i){
+  collectHojaVida();
+  state.record.hojaVida.eduSuperior.splice(i,1);
+  render();
+}
+function collectHojaVida(){
+  const hv = state.record.hojaVida;
+  const g = id => document.getElementById(id);
+  if(!g("hv-perfil")) return; // step not mounted
+  hv.perfilProfesional = g("hv-perfil").value;
+  hv.nacionalidad = g("hv-nacionalidad").value;
+  hv.estadoCivil = g("hv-estadocivil").value;
+  hv.telConvencional = g("hv-telconv").value;
+  hv.telCelular = g("hv-telcel").value;
+  hv.correoPersonal = g("hv-correopers").value;
+  hv.ciudad = g("hv-ciudad").value;
+  hv.parroquia = g("hv-parroquia").value;
+  hv.barrio = g("hv-barrio").value;
+  hv.sector = g("hv-sector").value;
+  hv.callePrincipal = g("hv-callep").value;
+  hv.calleSecundaria = g("hv-callesec").value;
+  hv.numeroCasa = g("hv-numcasa").value;
+  hv.referenciaUbicacion = g("hv-refubic").value;
+  document.querySelectorAll('[data-sup]').forEach(el=>{
+    hv.eduSuperior[el.dataset.sup][el.dataset.f] = el.value;
+  });
+  hv.eduSecundaria = {titulo:g("hv-sect").value, institucion:g("hv-seci").value, anio:g("hv-seca").value};
+  hv.eduPrimaria = {institucion:g("hv-pri").value};
+  document.querySelectorAll('[data-exp]').forEach(el=>{
+    hv.experiencia[el.dataset.exp][el.dataset.f] = el.value;
+  });
+  document.querySelectorAll('[data-cur]').forEach(el=>{
+    hv.cursos[el.dataset.cur][el.dataset.f] = el.value;
+  });
+  document.querySelectorAll('[data-rl]').forEach(el=>{
+    hv.refLaborales[el.dataset.rl][el.dataset.f] = el.value;
+  });
+  document.querySelectorAll('[data-rp]').forEach(el=>{
+    hv.refPersonales[el.dataset.rp][el.dataset.f] = el.value;
+  });
+  hv.idiomas = g("hv-idiomas").value;
+  hv.herramientas = g("hv-herramientas").value;
+  hv.consentimientoLopdp = g("hv-consent").checked;
+  if(hv.consentimientoLopdp) hv.fechaFirma = todayISO();
+}
+
+
+function stepActa(){
+  const a = state.record.acta;
+  const compromisos = [
+"Acogeré el carisma «Adorar, Reparar y Servir» de nuestra madre fundadora María Francisca de las Llagas en mis actividades diarias.",
+"Autorizo ser notificado en trámites institucionales a través de mi correo institucional y avisos por WhatsApp a mi número personal.",
+"Acataré el marco legal constitucional, el Reglamento Interno, el Código de Convivencia y el Reglamento de Higiene y Seguridad.",
+"Podré ser notificado legalmente en trámites externos ante dependencias del Estado según lo declarado en documentos adjuntos.",
+"Ingresaré a mi lugar de trabajo con puntualidad, conforme a las disposiciones de la autoridad institucional.",
+"Portaré correctamente mi uniforme de trabajo según los lineamientos de Inspección General.",
+"Cumpliré puntualmente los turnos asignados (entrada, recreo, salida, atención a representantes, programas y jornadas extracurriculares).",
+"Trabajaré en la comisión designada por la institución con responsabilidad y profesionalismo.",
+"Asistiré puntualmente a mis horas clase programadas.",
+"Acepto que mi atraso no justificado será registrado en el informe mensual de actividades.",
+"Estaré atento/a a que los estudiantes no salgan de mi hora clase sin justificación del Departamento de Inspección.",
+"Comunicaré de inmediato al departamento correspondiente cualquier novedad durante la jornada laboral.",
+"Seguiré y aplicaré las Rutas y Protocolos de Actuación frente a violencia o acoso escolar.",
+"Entregaré talleres o trabajos para las horas en que deba ausentarme por motivos institucionales o citas médicas.",
+"Seré cortés, amable y respetuoso con padres, madres y/o representantes legales.",
+"Brindaré buen trato a los estudiantes, aplicando normas de urbanidad, equidad y justicia.",
+"No mantendré relaciones sentimentales o amorosas de ningún tipo con estudiantes de la Institución.",
+"No agregaré como amigos a estudiantes en redes sociales personales (Facebook, Instagram, WhatsApp, TikTok, entre otras).",
+"No compartiré ni difundiré información o imágenes de estudiantes por redes sociales, cumpliendo los lineamientos de protección de datos.",
+"Guardaré estricta confidencialidad de los datos personales y/o sensibles de la comunidad educativa que estén en mi poder.",
+"En caso de incumplimiento, asumiré mi responsabilidad previo debido proceso, conforme al Reglamento Interno y normativa vigente.",
+"Declaro conocer que mis datos personales serán tratados por la Institución exclusivamente para el control laboral, la seguridad institucional y la ejecución del contrato de trabajo, conforme a la LOPDP."
+  ];
+  return `
+  <div class="card">
+    <div class="eyebrow">Paso 5 de 6 · Documento 4</div>
+    <h2 style="margin-top:0">Acta de Compromiso para Personal Institucional</h2>
+    <p class="hero-lead">Como <strong>${esc(state.record.identidad.tipoPersonal)}</strong> de la Unidad Educativa Particular "Francisca de las Llagas", acepto lo prescrito en el Código de Convivencia, el PEI, el Reglamento Interno, el Reglamento de Higiene y Seguridad y demás normativa institucional.</p>
+
+    <fieldset><legend>Datos de notificación</legend>
+      <div class="grid2">
+        <div class="field"><label>Correo institucional para notificaciones</label><input type="email" id="ac-correo" value="${esc(a.correoInstitucional)}"></div>
+        <div class="field"><label>Número personal para avisos por WhatsApp</label><input type="tel" id="ac-whatsapp" value="${esc(a.whatsapp)}"></div>
+      </div>
+    </fieldset>
+
+    <fieldset><legend>Compromisos que suscribo</legend>
+      <div class="consent-box" style="max-height:260px">
+        <ol>${compromisos.map(c=>`<li>${esc(c)}</li>`).join("")}</ol>
+      </div>
+      <label class="consent-accept"><input type="checkbox" id="ac-accept" ${a.acepta?'checked':''}>
+        <span>He leído y acepto libre y voluntariamente los 22 compromisos institucionales anteriores.</span></label>
+    </fieldset>
+
+    <div id="ac-error"></div>
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="saveAndGo(4,3)">← Atrás</button>
+      <button class="btn btn-primary" onclick="saveAndGo(4,5)">Guardar y continuar →</button>
+    </div>
+  </div>`;
+}
+function collectActa(){
+  const a = state.record.acta;
+  a.correoInstitucional = document.getElementById("ac-correo").value;
+  a.whatsapp = document.getElementById("ac-whatsapp").value;
+  a.acepta = document.getElementById("ac-accept").checked;
+  if(a.acepta) a.fecha = todayISO();
+}
+
+function stepAviso(){
+  const av = state.record.aviso;
+  return `
+  <div class="card">
+    <div class="eyebrow">Paso 3 de 6 · Documento 2</div>
+    <h2 style="margin-top:0">Aviso de Privacidad</h2>
+    <p class="hero-lead">Sobre el tratamiento de datos personales del personal de la Unidad Educativa Particular "Francisca de las Llagas", año lectivo 2026–2027.</p>
+
+    <div class="field"><label>Cargo</label>
+      <input type="text" id="av-cargo" value="${esc(av.cargo || (state.record.identidad && state.record.identidad.cargoEspecifico) || '')}" disabled style="background:var(--bg-alt);color:var(--ink-muted)">
+      <div class="hint">Definido en el Paso 1 (Identificación) según tu tipo de personal.</div></div>
+
+    <fieldset><legend>Resumen del Aviso de Privacidad</legend>
+      <div class="consent-box" style="max-height:230px">
+        La Unidad Educativa Particular "Francisca de las Llagas" (RUC 1791787579001) es responsable del tratamiento de tus datos personales conforme a la LOPDP. Se recaban datos de identificación, contacto, formación académica, historial laboral, datos patrimoniales para nómina y, cuando corresponda, datos sensibles de salud u ocupacionales, con fines de gestión de la relación laboral, nómina, seguridad y salud ocupacional, comunicación institucional y cumplimiento ante autoridades. Los datos se conservan mientras dure la relación laboral y los plazos legales exigidos, y podrás ejercer en cualquier momento tus derechos de Acceso, Rectificación, Eliminación, Oposición, Portabilidad y Suspensión (Derechos ARCO) escribiendo a fradellsecretaria@gmail.com o pdedatos300@gmail.com, dirigidos al Delegado de Protección de Datos.
+      </div>
+      <label class="consent-accept"><input type="checkbox" id="av-accept" ${av.acepta?'checked':''}>
+        <span>He leído y comprendido el Aviso de Privacidad y otorgo mi consentimiento para el tratamiento de mis datos personales conforme a lo descrito.</span></label>
+    </fieldset>
+
+    <div id="av-error"></div>
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="saveAndGo(2,1)">← Atrás</button>
+      <button class="btn btn-primary" onclick="saveAndGo(2,3)">Guardar y continuar →</button>
+    </div>
+  </div>`;
+}
+function collectAviso(){
+  const av = state.record.aviso;
+  av.cargo = document.getElementById("av-cargo").value;
+  av.acepta = document.getElementById("av-accept").checked;
+  if(av.acepta) av.fecha = todayISO();
+}
+
+function stepConsentimiento(){
+  const c = state.record.consentimiento;
+  return `
+  <div class="card">
+    <div class="eyebrow">Paso 4 de 6 · Documento 3</div>
+    <h2 style="margin-top:0">Consentimiento Informado</h2>
+    <p class="hero-lead">Para el tratamiento de datos personales, control biométrico (asistencia) y videovigilancia laboral, conforme al Art. 66 num. 19 de la Constitución y los Arts. 7, 8 y 12 de la LOPDP.</p>
+
+    <fieldset><legend>Resumen</legend>
+      <div class="consent-box" style="max-height:230px">
+        La Institución tratará mis datos generales (nombres, cédula, cargo, horario), mis datos biométricos (huella y/o reconocimiento facial, únicamente como algoritmo matemático derivado, para control de asistencia) e imágenes de videovigilancia en áreas comunes y aulas con fines de seguridad integral — nunca como fiscalización continua del desempeño docente diario. Los registros de video se conservan máximo 15 días y los datos biométricos máximo 30 días tras finalizar la relación laboral. Mis datos podrán compartirse únicamente con entidades públicas reguladoras (IESS, SRI, Ministerio del Trabajo, Ministerio de Educación) y proveedores encargados del tratamiento bajo contrato. Podré ejercer mis derechos ARCO en cualquier momento.
+      </div>
+      <label class="consent-accept"><input type="checkbox" id="ci-accept" ${c.acepta?'checked':''}>
+        <span>Otorgo mi consentimiento informado, libre y voluntario, para el tratamiento descrito de mis datos personales, biométricos y de videovigilancia.</span></label>
+    </fieldset>
+
+    <fieldset><legend>Casos especiales (autorizaciones independientes y opcionales)</legend>
+      <div class="field"><label>¿Autorizas el uso de tu imagen (fotos/videos) en eventos institucionales para redes sociales oficiales del plantel?</label>
+        <div class="radio-row">
+          <label class="radio-opt"><input type="radio" name="ci-imagen" value="Sí" ${c.autorizaImagen==="Sí"?"checked":""}> Sí, autorizo</label>
+          <label class="radio-opt"><input type="radio" name="ci-imagen" value="No" ${c.autorizaImagen==="No"?"checked":""}> No autorizo</label>
+        </div></div>
+      <div class="field"><label>¿Autorizas el tratamiento de tu ficha médica ocupacional (alergias, antecedentes) para atención de emergencias?</label>
+        <div class="radio-row">
+          <label class="radio-opt"><input type="radio" name="ci-salud" value="Sí" ${c.autorizaSalud==="Sí"?"checked":""}> Sí, autorizo</label>
+          <label class="radio-opt"><input type="radio" name="ci-salud" value="No" ${c.autorizaSalud==="No"?"checked":""}> No autorizo</label>
+        </div></div>
+    </fieldset>
+
+    <div id="ci-error"></div>
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="saveAndGo(3,2)">← Atrás</button>
+      <button class="btn btn-primary" onclick="saveAndGo(3,4)">Guardar y continuar →</button>
+    </div>
+  </div>`;
+}
+function collectConsentimiento(){
+  const c = state.record.consentimiento;
+  c.acepta = document.getElementById("ci-accept").checked;
+  const im = document.querySelector('input[name="ci-imagen"]:checked');
+  const sa = document.querySelector('input[name="ci-salud"]:checked');
+  c.autorizaImagen = im ? im.value : "";
+  c.autorizaSalud = sa ? sa.value : "";
+  if(c.acepta) c.fecha = todayISO();
+}
+
+function stepResumen(){
+  const r = state.record;
+  const checks = [
+    ["Hoja de Vida", r.hojaVida.consentimientoLopdp],
+    ["Aviso de Privacidad", r.aviso.acepta],
+    ["Consentimiento Informado", r.consentimiento.acepta],
+    ["Acta de Compromiso", r.acta.acepta],
+  ];
+  const allDone = checks.every(c=>c[1]);
+  return `
+  <div class="card">
+    <div class="eyebrow">Paso 6 de 6</div>
+    <h2 style="margin-top:0">Resumen y confirmación</h2>
+    <div class="kv" style="margin-bottom:16px">
+      <div class="k">Nombres y apellidos</div><div class="v">${esc(r.identidad.nombresApellidos)}</div>
+      <div class="k">Cédula</div><div class="v">${esc(r.cedula)}</div>
+      <div class="k">Tipo de personal</div><div class="v">${esc(r.identidad.tipoPersonal)}</div>
+      <div class="k">Cargo</div><div class="v">${blank(r.aviso.cargo)}</div>
+    </div>
+    <div class="doc-list">
+      ${checks.map(([name,ok],i)=>`
+        <div class="doc-row"><div class="num" style="background:${ok?'var(--pine)':'var(--gold)'}">${ok?'✓':i+1}</div>
+        <div><div class="name">${name}</div><div class="desc">${ok?'Completo':'Pendiente — vuelve al paso correspondiente'}</div></div></div>
+      `).join("")}
+    </div>
+    ${!allDone ? `<div class="error-msg" style="margin-top:16px">Aún tienes documentos pendientes de aceptar. Puedes guardar y continuar luego, o completar todo ahora.</div>` : ""}
+    <div id="rs-error"></div>
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="go('staff-step',{step:4})">← Atrás</button>
+      <button class="btn ${allDone?'btn-primary':'btn-secondary'}" onclick="finalizeSubmission()">${allDone? 'Confirmar y enviar ✓' : 'Guardar progreso'}</button>
+    </div>
+  </div>`;
+}
+
+async function finalizeSubmission(){
+  const r = state.record;
+  const complete = isRecordComplete(r);
+  r.meta.completo = complete;
+  if(complete){ r.meta.enviado = true; r.meta.fechaEnvio = todayISO(); }
+  await saveRecord(r);
+  if(complete){
+    go("staff-done");
+  }else{
+    document.getElementById("rs-error").innerHTML = `<div class="error-msg">Tu progreso fue guardado. Vuelve cuando quieras con tu cédula para terminar.</div>`;
+  }
+}
+
+function screenStaffDone(){
+  const r = state.record;
+  const scanCount = DOC_TYPES.filter(d=>r.escaneos && r.escaneos[d.key]).length;
+  return `
+  <div class="card" style="text-align:center;padding:44px 28px 28px">
+    <div style="width:56px;height:56px;border-radius:50%;background:var(--pine-tint);color:var(--pine);display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 16px">✓</div>
+    <h2 style="margin:0 0 8px">¡Documentos completados!</h2>
+    <p class="hero-lead" style="margin:0 auto 22px">Gracias, ${esc(r.identidad.nombresApellidos)}. Tus 4 documentos fueron registrados. Sigue estos pasos para terminar el proceso:</p>
+    <div class="doc-list" style="text-align:left;max-width:480px;margin:0 auto 22px">
+      <div class="doc-row"><div class="num">1</div><div><div class="name">Imprime tus 4 documentos</div><div class="desc">Formato listo para firma física</div></div></div>
+      <div class="doc-row"><div class="num">2</div><div><div class="name">Fírmalos a mano</div><div class="desc">Donde el documento lo indique</div></div></div>
+      <div class="doc-row"><div class="num">3</div><div><div class="name">Escanea o fotografía cada uno</div><div class="desc">Y súbelos abajo, o entrégalos al Departamento Legal</div></div></div>
+    </div>
+    <div class="btn-row" style="justify-content:center">
+      <button class="btn btn-pine" onclick="go('print-doc',{printCedula:'${esc(r.cedula)}'})">Ver e imprimir mis 4 documentos</button>
+      <button class="btn btn-secondary" onclick="go('staff-step',{step:1})">Editar mis respuestas</button>
+      <button class="btn btn-secondary" onclick="go('landing',{record:null,cedulaActiva:null})">Volver al inicio</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="eyebrow">Paso final · ${scanCount} de 4 subidos</div>
+    ${renderScanUploader(r,{context:'staff'})}
+  </div>
+  <div class="card">
+    ${renderSoporteUploader(r,{context:'staff'})}
+  </div>`;
+}
+
+/* Save current step fields into record, persist, then move */
+async function saveAndGo(fromStep, toStep){
+  try{
+    if(fromStep===1) collectHojaVida();
+    if(fromStep===2) collectAviso();
+    if(fromStep===3) collectConsentimiento();
+    if(fromStep===4) collectActa();
+  }catch(e){ console.error(e); }
+  state.record.meta.completo = isRecordComplete(state.record);
+  await saveRecord(state.record);
+  go("staff-step",{step:toStep});
+}
+
+
+/* ================= ADMIN ================= */
+function screenAdminGate(){
+  return `
+  <div class="card" style="max-width:420px;margin:40px auto">
+    <div class="eyebrow">Acceso restringido</div>
+    <h2 style="margin-top:0">Área administrativa</h2>
+    <p class="hero-lead">Ingresa el código del Departamento Legal / RRHH.</p>
+    <div id="gate-error"></div>
+    <div class="field"><input type="password" id="pin" placeholder="Código de acceso" onkeydown="if(event.key==='Enter') tryAdminLogin()"></div>
+    <div class="btn-row"><span></span><button class="btn btn-primary" onclick="tryAdminLogin()">Ingresar</button></div>
+  </div>`;
+}
+async function tryAdminLogin(){
+  const v = document.getElementById("pin").value;
+  let ok = false;
+  try{ ok = await gsRun('verificarPin', v); }catch(e){ ok = false; }
+  if(ok){
+    state.adminAuthed = true;
+    state.loading = true;
+    render();
+    state.adminList = await listAllRecords();
+    state.loading = false;
+    go("admin-dashboard");
+  }else{
+    document.getElementById("gate-error").innerHTML = `<div class="error-msg">Código incorrecto.</div>`;
+  }
+}
+
+function screenAdminDashboard(){
+  if(!state.adminAuthed) return screenAdminGate();
+  const list = state.adminList;
+  const total = list.length;
+  const completos = list.filter(r=>r.meta.completo).length;
+  const pendientes = total - completos;
+  const porTipo = {};
+  TIPOS_PERSONAL.forEach(t=>porTipo[t]=0);
+  list.forEach(r=>{ if(porTipo[r.identidad.tipoPersonal]!==undefined) porTipo[r.identidad.tipoPersonal]++; });
+  const escaneosCompletos = list.filter(r => DOC_TYPES.every(d=>r.escaneos && r.escaneos[d.key])).length;
+
+  let filtered = list.filter(r=>{
+    if(state.adminFilterTipo!=="Todos" && r.identidad.tipoPersonal!==state.adminFilterTipo) return false;
+    if(state.adminFilterEstado==="Completos" && !r.meta.completo) return false;
+    if(state.adminFilterEstado==="Pendientes" && r.meta.completo) return false;
+    if(state.adminSearch){
+      const s = state.adminSearch.toLowerCase();
+      if(!(r.identidad.nombresApellidos||"").toLowerCase().includes(s) && !(r.cedula||"").includes(s)) return false;
+    }
+    return true;
+  });
+
+  return `
+  <div class="card no-print">
+    <div class="eyebrow">Panel administrativo</div>
+    <h2 style="margin-top:0">Registros de personal</h2>
+
+    <div class="stat-row">
+      <div class="stat"><div class="n">${total}</div><div class="l">Registros iniciados</div></div>
+      <div class="stat"><div class="n">${completos}</div><div class="l">Completos</div></div>
+      <div class="stat"><div class="n">${pendientes}</div><div class="l">Pendientes</div></div>
+      <div class="stat"><div class="n">${escaneosCompletos}</div><div class="l">Escaneos 4/4</div></div>
+      <div class="stat"><div class="n">${porTipo["Docente"]}</div><div class="l">Docentes</div></div>
+    </div>
+
+    <div class="toolbar">
+      <input type="text" placeholder="Buscar por nombre o cédula…" value="${esc(state.adminSearch)}" oninput="state.adminSearch=this.value; renderAdminTable();" style="flex:1;min-width:180px">
+      <select onchange="state.adminFilterTipo=this.value; renderAdminTable();">
+        <option ${state.adminFilterTipo==="Todos"?"selected":""}>Todos</option>
+        ${TIPOS_PERSONAL.map(t=>`<option ${state.adminFilterTipo===t?"selected":""}>${t}</option>`).join("")}
+      </select>
+      <select onchange="state.adminFilterEstado=this.value; renderAdminTable();">
+        ${["Todos","Completos","Pendientes"].map(o=>`<option ${state.adminFilterEstado===o?"selected":""}>${o}</option>`).join("")}
+      </select>
+      <button class="btn btn-secondary btn-sm" onclick="exportCSV()">⬇ Exportar CSV</button>
+      <button class="btn btn-secondary btn-sm" onclick="depurarDuplicados()">Depurar duplicados</button>
+      <button class="btn btn-secondary btn-sm" onclick="refreshAdmin()">↻ Actualizar</button>
+    </div>
+
+    <div id="admin-table">${adminTableHTML(filtered)}</div>
+  </div>`;
+}
+
+function scanBadge(r){
+  const n = DOC_TYPES.filter(d=>r.escaneos && r.escaneos[d.key]).length;
+  if(n===4) return `<span class="badge ok">4/4</span>`;
+  if(n===0) return `<span class="badge pending">0/4</span>`;
+  return `<span class="badge tag">${n}/4</span>`;
+}
+function adminTableHTML(filtered){
+  if(filtered.length===0){
+    return `<div class="empty-state">No hay registros que coincidan con el filtro.</div>`;
+  }
+  return `
+  <table>
+    <thead><tr><th>Nombre</th><th>Cédula</th><th>Tipo</th><th>Documentos</th><th>Escaneos</th><th>Actualizado</th><th></th></tr></thead>
+    <tbody>
+      ${filtered.map(r=>`
+        <tr>
+          <td>${esc(r.identidad.nombresApellidos)}</td>
+          <td class="mono">${esc(r.cedula)}</td>
+          <td><span class="badge tag">${esc(r.identidad.tipoPersonal||"—")}</span></td>
+          <td>
+            ${r.hojaVida.consentimientoLopdp?'<span class="badge ok">HV</span>':'<span class="badge pending">HV</span>'}
+            ${r.acta.acepta?'<span class="badge ok">Acta</span>':'<span class="badge pending">Acta</span>'}
+            ${r.aviso.acepta?'<span class="badge ok">Aviso</span>':'<span class="badge pending">Aviso</span>'}
+            ${r.consentimiento.acepta?'<span class="badge ok">Consent.</span>':'<span class="badge pending">Consent.</span>'}
+          </td>
+          <td>${scanBadge(r)}</td>
+          <td>${esc(r.meta.actualizado)}</td>
+          <td><button class="btn btn-secondary btn-sm" onclick="openDetail('${esc(r.cedula)}')">Ver</button></td>
+        </tr>`).join("")}
+    </tbody>
+  </table>`;
+}
+function renderAdminTable(){
+  let filtered = state.adminList.filter(r=>{
+    if(state.adminFilterTipo!=="Todos" && r.identidad.tipoPersonal!==state.adminFilterTipo) return false;
+    if(state.adminFilterEstado==="Completos" && !r.meta.completo) return false;
+    if(state.adminFilterEstado==="Pendientes" && r.meta.completo) return false;
+    if(state.adminSearch){
+      const s = state.adminSearch.toLowerCase();
+      if(!(r.identidad.nombresApellidos||"").toLowerCase().includes(s) && !(r.cedula||"").includes(s)) return false;
+    }
+    return true;
+  });
+  document.getElementById("admin-table").innerHTML = adminTableHTML(filtered);
+}
+async function refreshAdmin(){
+  state.adminList = await listAllRecords();
+  render();
+}
+async function depurarDuplicados(){
+  if(!confirm("Esto buscará cédulas duplicadas de una misma persona, conservará el registro más reciente de cada una y eliminará los demás. Esta acción no se puede deshacer. ¿Continuar?")) return;
+  try{
+    const res = await gsRun('depurarDuplicados');
+    if(res && res.grupos > 0){
+      alert(`Listo. Se unificaron ${res.grupos} persona(s) con duplicados y se eliminaron ${res.eliminados} registro(s) sobrantes.`);
+    }else{
+      alert("No se encontraron registros duplicados.");
+    }
+    await refreshAdmin();
+  }catch(e){
+    alert("No se pudo depurar los duplicados. Intenta de nuevo.");
+  }
+}
+function openDetail(cedula){
+  go("admin-detail",{adminDetailCedula:cedula});
+}
+
+function screenAdminDetail(){
+  const r = state.adminList.find(x=>x.cedula===state.adminDetailCedula);
+  if(!r) return `<div class="card">Registro no encontrado. <button class="btn btn-secondary" onclick="go('admin-dashboard')">Volver</button></div>`;
+  return `
+  <div class="card no-print">
+    <button class="btn btn-secondary btn-sm" onclick="go('admin-dashboard')">← Volver al panel</button>
+    <div style="margin-top:16px;display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px">
+      <div>
+        <div class="eyebrow">${esc(r.identidad.tipoPersonal||"—")}</div>
+        <h2 style="margin:0">${esc(r.identidad.nombresApellidos)}</h2>
+        <div class="hint">Cédula ${esc(r.cedula)} · Última actualización ${esc(r.meta.actualizado)} · ${r.meta.completo?'<span class="badge ok">Completo</span>':'<span class="badge pending">Incompleto</span>'}</div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-pine btn-sm" onclick="go('print-doc',{printCedula:'${esc(r.cedula)}'})">Imprimir documentos</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteFromAdmin('${esc(r.cedula)}')">Eliminar registro</button>
+      </div>
+    </div>
+    <div style="margin-top:22px">${renderDocPreview(r)}</div>
+    <div style="margin-top:18px">${renderScanUploader(r,{context:'admin'})}</div>
+    <div style="margin-top:18px">${renderSoporteUploader(r,{context:'admin'})}</div>
+  </div>`;
+}
+async function deleteFromAdmin(cedula){
+  if(!confirm("¿Eliminar permanentemente este registro? Esta acción no se puede deshacer.")) return;
+  await deleteRecord(cedula);
+  state.adminList = state.adminList.filter(r=>r.cedula!==cedula);
+  go("admin-dashboard");
+}
+
+function renderDocPreview(r){
+  const hv = r.hojaVida;
+  return `
+  <fieldset><legend>Hoja de Vida</legend>
+    <div class="kv">
+      <div class="k">Nacionalidad</div><div class="v">${blank(hv.nacionalidad)}</div>
+      <div class="k">Estado civil</div><div class="v">${blank(hv.estadoCivil)}</div>
+      <div class="k">Domicilio</div><div class="v">${blank([hv.callePrincipal,hv.calleSecundaria,hv.barrio,hv.ciudad].filter(Boolean).join(", "))}</div>
+      <div class="k">Formación superior</div><div class="v">${blank(hv.eduSuperior.map(s=>[s.titulo,s.institucion].filter(Boolean).join(" — ")).filter(Boolean).join("; "))}</div>
+      <div class="k">Idiomas</div><div class="v">${blank(hv.idiomas)}</div>
+    </div>
+  </fieldset>
+  <fieldset><legend>Aviso de Privacidad</legend>
+    <div class="kv"><div class="k">Cargo</div><div class="v">${blank(r.aviso.cargo)}</div></div>
+  </fieldset>
+  <fieldset><legend>Consentimiento Informado</legend>
+    <div class="kv"><div class="k">Imagen en redes</div><div class="v">${blank(r.consentimiento.autorizaImagen)}</div>
+    <div class="k">Ficha médica</div><div class="v">${blank(r.consentimiento.autorizaSalud)}</div></div>
+  </fieldset>
+  <fieldset><legend>Acta de Compromiso</legend>
+    <div class="kv"><div class="k">Correo institucional</div><div class="v">${blank(r.acta.correoInstitucional)}</div>
+    <div class="k">WhatsApp</div><div class="v">${blank(r.acta.whatsapp)}</div></div>
+  </fieldset>`;
+}
+
+function exportCSV(){
+  const rows = [["Nombres","Cedula","Tipo","Cargo","CorreoInstitucional","Celular","Completo","HojaVidaOK","ActaOK","AvisoOK","ConsentimientoOK","EscaneosSubidos","AutorizaImagen","AutorizaSalud","Actualizado"]];
+  state.adminList.forEach(r=>{
+    const nScans = DOC_TYPES.filter(d=>r.escaneos && r.escaneos[d.key]).length;
+    rows.push([
+      r.identidad.nombresApellidos, r.cedula, r.identidad.tipoPersonal, r.aviso.cargo||"",
+      r.acta.correoInstitucional||"", r.acta.whatsapp||"",
+      r.meta.completo?"Si":"No",
+      r.hojaVida.consentimientoLopdp?"Si":"No", r.acta.acepta?"Si":"No", r.aviso.acepta?"Si":"No", r.consentimiento.acepta?"Si":"No",
+      `${nScans}/4`,
+      r.consentimiento.autorizaImagen||"", r.consentimiento.autorizaSalud||"",
+      r.meta.actualizado
+    ]);
+  });
+  const csv = rows.map(row => row.map(v => `"${String(v).replace(/"/g,'""')}"`).join(",")).join("\n");
+  const blob = new Blob(["\uFEFF"+csv], {type:"text/csv;charset=utf-8;"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = "personal_fdll_" + todayISO() + ".csv";
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+
+/* ================= PRINT VIEW ================= */
+function screenPrint(){
+  const cedula = state.printCedula;
+  const r = (state.record && state.record.cedula===cedula) ? state.record :
+            state.adminList.find(x=>x.cedula===cedula);
+  if(!r) return `<div class="card">No se encontró el registro.</div>`;
+
+  return `
+  <div class="no-print" style="max-width:960px;margin:16px auto;padding:0 20px;display:flex;gap:10px;justify-content:flex-end">
+    <button class="btn btn-secondary" onclick="history.back()">← Volver</button>
+    <button class="btn btn-primary" onclick="window.print()">Imprimir / Guardar como PDF</button>
+  </div>
+  <div style="max-width:820px;margin:0 auto;padding:0 20px">
+    ${printHojaVida(r)}
+    ${printAviso(r)}
+    ${printConsentimiento(r)}
+    ${printActa(r)}
+  </div>`;
+}
+
+function printHojaVida(r){
+  const hv = r.hojaVida;
+  return `
+  <div class="doc-sheet">
+    <h2>HOJA DE VIDA</h2>
+    <div class="doc-sub">Unidad Educativa Particular "Francisca de las Llagas"</div>
+
+    <h4>I. Perfil profesional</h4>
+    <p style="font-size:12.5px">${blank(hv.perfilProfesional)}</p>
+
+    <h4>II. Datos personales</h4>
+    <div class="kv">
+      <div class="k">Apellidos y nombres</div><div class="v">${blank(r.identidad.nombresApellidos)}</div>
+      <div class="k">Cédula / Pasaporte</div><div class="v">${blank(r.cedula)}</div>
+      <div class="k">Nacionalidad</div><div class="v">${blank(hv.nacionalidad)}</div>
+      <div class="k">Estado civil</div><div class="v">${blank(hv.estadoCivil)}</div>
+      <div class="k">Teléfono convencional</div><div class="v">${blank(hv.telConvencional)}</div>
+      <div class="k">Teléfono celular</div><div class="v">${blank(hv.telCelular)}</div>
+      <div class="k">Correo personal</div><div class="v">${blank(hv.correoPersonal)}</div>
+    </div>
+
+    <h4>III. Dirección exacta del domicilio</h4>
+    <div class="kv">
+      <div class="k">Ciudad / Parroquia</div><div class="v">${blank(hv.ciudad)} / ${blank(hv.parroquia)}</div>
+      <div class="k">Barrio / Sector</div><div class="v">${blank(hv.barrio)} / ${blank(hv.sector)}</div>
+      <div class="k">Calle principal / secundaria</div><div class="v">${blank(hv.callePrincipal)} / ${blank(hv.calleSecundaria)}</div>
+      <div class="k">Número de casa</div><div class="v">${blank(hv.numeroCasa)}</div>
+      <div class="k">Referencia</div><div class="v">${blank(hv.referenciaUbicacion)}</div>
+    </div>
+
+    <h4>IV. Formación académica</h4>
+    <p style="font-size:12px;font-weight:600;color:var(--wine-dark);margin:6px 0 2px">Educación superior</p>
+    ${hv.eduSuperior.filter(s=>s.titulo||s.institucion).map(s=>`
+      <div class="kv" style="margin-bottom:8px">
+        <div class="k">Título</div><div class="v">${blank(s.titulo)}</div>
+        <div class="k">Universidad / Instituto</div><div class="v">${blank(s.institucion)}</div>
+        <div class="k">Senescyt</div><div class="v">${blank(s.senescyt)}</div>
+        <div class="k">Año de graduación</div><div class="v">${blank(s.anio)}</div>
+      </div>`).join("") || `<p style="font-size:12px;color:var(--ink-muted)">Sin título superior registrado.</p>`}
+    <div class="kv">
+      <div class="k">Colegio</div><div class="v">${blank(hv.eduSecundaria.institucion)} (${blank(hv.eduSecundaria.titulo)}, ${blank(hv.eduSecundaria.anio)})</div>
+      <div class="k">Escuela</div><div class="v">${blank(hv.eduPrimaria.institucion)}</div>
+    </div>
+
+    <h4>V. Experiencia laboral</h4>
+    ${hv.experiencia.map(e=>`
+      <div class="kv" style="margin-bottom:10px">
+        <div class="k">Institución</div><div class="v">${blank(e.institucion)}</div>
+        <div class="k">Cargo</div><div class="v">${blank(e.cargo)}</div>
+        <div class="k">Período</div><div class="v">${blank(e.mesInicio)} ${blank(e.anioInicio)} — ${blank(e.mesFin)} ${blank(e.anioFin)}</div>
+        <div class="k">Funciones</div><div class="v" style="font-weight:400">${blank(e.funciones)}</div>
+        <div class="k">Motivo de salida</div><div class="v" style="font-weight:400">${blank(e.motivoSalida)}</div>
+      </div>`).join("")}
+
+    <h4>VI. Cursos y capacitaciones</h4>
+    ${hv.cursos.filter(c=>c.nombre).map(c=>`
+      <div class="kv" style="margin-bottom:6px"><div class="k">${blank(c.nombre)}</div><div class="v" style="font-weight:400">${blank(c.institucion)} · ${blank(c.anio)} · ${blank(c.horas)}h</div></div>
+    `).join("") || `<p style="font-size:12px;color:var(--ink-muted)">Sin cursos registrados.</p>`}
+
+    <h4>VII. Idiomas y herramientas</h4>
+    <div class="kv"><div class="k">Idiomas</div><div class="v">${blank(hv.idiomas)}</div><div class="k">Herramientas</div><div class="v">${blank(hv.herramientas)}</div></div>
+
+    <h4>VIII. Referencias laborales</h4>
+    ${hv.refLaborales.filter(x=>x.nombre).map(rl=>`<div class="kv" style="margin-bottom:4px"><div class="k">${blank(rl.nombre)}</div><div class="v" style="font-weight:400">${blank(rl.cargo)} — ${blank(rl.institucion)} — ${blank(rl.telefono)}</div></div>`).join("")}
+
+    <h4>IX. Referencias personales</h4>
+    ${hv.refPersonales.filter(x=>x.nombre).map(rp=>`<div class="kv" style="margin-bottom:4px"><div class="k">${blank(rp.nombre)}</div><div class="v" style="font-weight:400">${blank(rp.relacion)} (${blank(rp.parentesco)}) — ${blank(rp.telefono)}</div></div>`).join("")}
+
+    <h4>X. Consentimiento (LOPDP)</h4>
+    <p style="font-size:12px">${hv.consentimientoLopdp ? "El titular autorizó el tratamiento de los datos de esta Hoja de Vida conforme a la LOPDP." : "Consentimiento no otorgado."}</p>
+
+    <div class="sig-block">
+      <div class="sig-line">Firma del postulante / personal — C.I. ${esc(r.cedula)}</div>
+      <div class="sig-line">Fecha: ${fmtDate(hv.fechaFirma)}</div>
+    </div>
+  </div>`;
+}
+
+function printActa(r){
+  const a = r.acta;
+  const tipos = TIPOS_PERSONAL.map(t=>`${t} [${r.identidad.tipoPersonal===t?'X':' '}]`).join("   ");
+  return `
+  <div class="doc-sheet">
+    <h2>ACTA DE COMPROMISO PARA PERSONAL INSTITUCIONAL</h2>
+    <div class="doc-sub">Quito, D.M., ${fmtDate(a.fecha)}</div>
+    <p style="font-size:12.5px">Yo, <strong>${blank(r.identidad.nombresApellidos)}</strong>, titular de la cédula de ciudadanía No. <strong>${blank(r.cedula)}</strong>, en mi calidad de personal: ${tipos}, de la Unidad Educativa Particular "Francisca de Las Llagas", acepto y me allano libre y voluntariamente a lo prescrito en el Código de Convivencia, PEI, Reglamento Interno, Reglamento de Higiene y Seguridad, circulares, oficios, convocatorias y memorandos del plantel y demás normativa legal.</p>
+    <div class="kv"><div class="k">Correo institucional de notificación</div><div class="v">${blank(a.correoInstitucional)}</div>
+    <div class="k">WhatsApp personal para avisos</div><div class="v">${blank(a.whatsapp)}</div></div>
+    <p style="font-size:12px;margin-top:10px">${a.acepta ? "El/la trabajador/a declaró haber leído y aceptado los 22 compromisos institucionales detallados en el documento fuente, incluyendo la cláusula de confidencialidad y tratamiento de datos (LOPDP)." : "Compromisos no aceptados."}</p>
+    <div class="sig-block">
+      <div class="sig-line">TRABAJADOR/A — Firma — C.I. ${esc(r.cedula)}</div>
+      <div class="sig-line">Departamento Legal — Fecha: ${fmtDate(a.fecha)}</div>
+    </div>
+  </div>`;
+}
+
+function printAviso(r){
+  const av = r.aviso;
+  return `
+  <div class="doc-sheet">
+    <h2>AVISO DE PRIVACIDAD SOBRE EL TRATAMIENTO DE DATOS PERSONALES</h2>
+    <div class="doc-sub">Unidad Educativa Particular "Francisca de las Llagas" · Año Lectivo 2026–2027</div>
+    <p style="font-size:12px">Responsable del tratamiento: Unidad Educativa Particular "Francisca de las Llagas", RUC 1791787579001, Calle Domingo Espinar OE8 N23-73 y Diego Zorrilla, sector La Gasca, Quito. Delegado de Protección de Datos: MSc. Byron Rosendo Pérez Solís (pdedatos300@gmail.com).</p>
+    <div class="kv">
+      <div class="k">Nombre completo del trabajador</div><div class="v">${blank(r.identidad.nombresApellidos)}</div>
+      <div class="k">Cargo</div><div class="v">${blank(av.cargo)}</div>
+    </div>
+    <p style="font-size:12px;margin-top:10px">${av.acepta ? "Manifiesto que he leído y entendido el Aviso de Privacidad, por lo que otorgo mi consentimiento expreso para el tratamiento de mis datos personales, incluidos los sensibles, patrimoniales y financieros, para los fines allí descritos." : "Consentimiento no otorgado."}</p>
+    <div class="sig-block">
+      <div class="sig-line">Firma del trabajador — C.I. ${esc(r.cedula)}</div>
+      <div class="sig-line">Fecha: ${fmtDate(av.fecha)}</div>
+    </div>
+  </div>`;
+}
+
+function printConsentimiento(r){
+  const c = r.consentimiento;
+  return `
+  <div class="doc-sheet">
+    <h2>CONSENTIMIENTO INFORMADO PARA EL TRATAMIENTO DE DATOS PERSONALES, CONTROL BIOMÉTRICO Y VIDEOVIGILANCIA LABORAL</h2>
+    <div class="doc-sub">Unidad Educativa Particular "Francisca de las Llagas" · RUC 1791787579001</div>
+    <p style="font-size:12px">Yo, <strong>${blank(r.identidad.nombresApellidos)}</strong>, titular de la cédula de ciudadanía No. <strong>${blank(r.cedula)}</strong>, declaro de forma voluntaria haber sido informado de manera clara y detallada sobre la recolección y uso de mis datos personales, biométricos y de videovigilancia, conforme al Art. 66 num. 19 de la Constitución y los Arts. 7, 8 y 12 de la LOPDP.</p>
+    <p style="font-size:12px">${c.acepta ? "Otorgo mi consentimiento informado, libre y voluntario, para el tratamiento descrito." : "Consentimiento no otorgado."}</p>
+    <h4>Casos especiales (autorizaciones independientes)</h4>
+    <div class="kv">
+      <div class="k">Uso de imagen en redes institucionales</div><div class="v">${blank(c.autorizaImagen)}</div>
+      <div class="k">Tratamiento de ficha médica ocupacional</div><div class="v">${blank(c.autorizaSalud)}</div>
+    </div>
+    <div class="sig-block">
+      <div class="sig-line">Firma del trabajador — C.I. ${esc(r.cedula)}</div>
+      <div class="sig-line">Fecha: ${fmtDate(c.fecha)}</div>
+    </div>
+  </div>`;
+}
+
+
+/* ================= ESCANEOS DE DOCUMENTOS FIRMADOS (Google Drive) ================= */
+function fileToDataURL(file){
+  return new Promise((resolve,reject)=>{
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(file);
+  });
+}
+
+async function saveScanFile(cedula, docKey, file){
+  if(file.size > MAX_SCAN_BYTES){
+    return {ok:false, msg:`"${file.name}" pesa ${(file.size/1024/1024).toFixed(1)} MB. El máximo permitido es 4 MB — comprime la imagen o el PDF e inténtalo de nuevo.`};
+  }
+  let dataUrl;
+  try{ dataUrl = await fileToDataURL(file); }
+  catch(e){ return {ok:false, msg:"No se pudo leer el archivo. Intenta con otro formato (JPG, PNG o PDF)."}; }
+  try{
+    const res = await gsRun('guardarEscaneo', cedula, docKey, dataUrl, file.name, file.type||"application/octet-stream");
+    if(!res || !res.ok) return {ok:false, msg:(res && res.msg) || "No se pudo guardar el archivo. Intenta de nuevo."};
+    return {ok:true, meta:{nombre:res.nombre, tipo:res.tipo, fecha:res.fecha, tamano:res.tamano, url:res.url}};
+  }catch(e){ return {ok:false, msg:"No se pudo subir el archivo. Intenta de nuevo."}; }
+}
+async function deleteScanFile(cedula, docKey){
+  try{ await gsRun('eliminarEscaneo', cedula, docKey); return true; }
+  catch(e){ return false; }
+}
+
+function renderScanUploader(record, opts){
+  const ctx = (opts && opts.context) || "staff";
+  return `
+  <fieldset><legend>Documentos firmados escaneados</legend>
+    <p class="hint" style="margin-top:-4px">Sube la foto o el PDF de cada documento ya impreso y firmado a mano (máximo 4 MB por archivo). También puedes hacerlo más tarde volviendo a ingresar con la cédula.</p>
+    <div class="scan-list">
+    ${DOC_TYPES.map(d=>{
+      const meta = record.escaneos && record.escaneos[d.key];
+      return `
+      <div class="scan-row">
+        <div class="scan-info">
+          <div class="name">${esc(d.label)}</div>
+          ${meta ? `<div class="desc">${esc(meta.nombre)} · ${(meta.tamano/1024).toFixed(0)} KB · subido ${esc(meta.fecha)}</div>` : `<div class="desc" style="color:var(--ink-muted)">Sin subir todavía</div>`}
+        </div>
+        <div class="scan-actions">
+          ${meta ? `<span class="badge ok">Subido</span>
+            <button class="btn btn-secondary btn-sm" onclick="viewScan('${esc(record.cedula)}','${d.key}')">Ver</button>
+            <button class="btn btn-danger btn-sm" onclick="removeScan('${ctx}','${esc(record.cedula)}','${d.key}')">Eliminar</button>`
+            : `<span class="badge pending">Pendiente</span>`}
+          <label class="btn btn-secondary btn-sm upload-label">
+            ${meta ? "Reemplazar" : "Subir archivo"}
+            <input type="file" accept="image/*,.pdf,application/pdf" style="display:none" onchange="handleScanUpload(event,'${ctx}','${esc(record.cedula)}','${d.key}')">
+          </label>
+        </div>
+      </div>`;
+    }).join("")}
+    </div>
+    <div id="scan-error-${ctx}"></div>
+  </fieldset>`;
+}
+
+async function handleScanUpload(event, ctx, cedula, docKey){
+  const file = event.target.files && event.target.files[0];
+  if(!file) return;
+  const errBox = document.getElementById(`scan-error-${ctx}`);
+  if(errBox) errBox.innerHTML = `<div class="hint">Subiendo "${esc(file.name)}"…</div>`;
+  const res = await saveScanFile(cedula, docKey, file);
+  if(!res.ok){
+    if(errBox) errBox.innerHTML = `<div class="error-msg">${esc(res.msg)}</div>`;
+    return;
+  }
+  if(errBox) errBox.innerHTML = "";
+
+  if(ctx==="staff" && state.record && state.record.cedula===cedula){
+    state.record.escaneos = state.record.escaneos || {};
+    state.record.escaneos[docKey] = res.meta;
+    await saveRecord(state.record);
+  }else{
+    let rec = state.adminList.find(r=>r.cedula===cedula) || await loadRecord(cedula);
+    if(rec){
+      rec.escaneos = rec.escaneos || {};
+      rec.escaneos[docKey] = res.meta;
+      await saveRecord(rec);
+      const idx = state.adminList.findIndex(r=>r.cedula===cedula);
+      if(idx>=0) state.adminList[idx] = rec; else state.adminList.push(rec);
+    }
+  }
+  render();
+}
+
+async function removeScan(ctx, cedula, docKey){
+  if(!confirm("¿Eliminar este archivo escaneado? Podrás volver a subirlo después.")) return;
+  await deleteScanFile(cedula, docKey);
+  if(ctx==="staff" && state.record && state.record.cedula===cedula){
+    state.record.escaneos = state.record.escaneos || {};
+    state.record.escaneos[docKey] = null;
+    await saveRecord(state.record);
+  }else{
+    let rec = state.adminList.find(r=>r.cedula===cedula);
+    if(rec){
+      rec.escaneos = rec.escaneos || {};
+      rec.escaneos[docKey] = null;
+      await saveRecord(rec);
+    }
+  }
+  render();
+}
+
+function viewScan(cedula, docKey){
+  const rec = (state.record && state.record.cedula===cedula) ? state.record
+             : (state.adminList || []).find(r=>r.cedula===cedula);
+  const meta = rec && rec.escaneos && rec.escaneos[docKey];
+  if(!meta || !meta.url){ alert("No se encontró el archivo. Puede que aún no se haya subido."); return; }
+  window.open(meta.url, "_blank");
+}
+
+/* ================= DOCUMENTOS DE RESPALDO (varios archivos por categoría) ================= */
+function renderSoporteUploader(record, opts){
+  const ctx = (opts && opts.context) || "staff";
+  return `
+  <fieldset><legend>Documentos de respaldo</legend>
+    <p class="hint" style="margin-top:-4px">Sube foto o PDF de estos documentos (si aplica en tu caso). Puedes subir más de un archivo por categoría — máximo 4 MB cada uno.</p>
+    <div class="scan-list">
+    ${SOPORTE_TYPES.map(s=>{
+      const files = (record.soportes && record.soportes[s.key]) || [];
+      return `
+      <div class="scan-row" style="align-items:flex-start">
+        <div class="scan-info" style="flex:1;min-width:180px">
+          <div class="name">${esc(s.label)}</div>
+          ${files.length ? files.map(f=>`
+            <div class="desc" style="display:flex;align-items:center;gap:8px;margin-top:4px;flex-wrap:wrap">
+              <span>${esc(f.nombre)} · ${(f.tamano/1024).toFixed(0)} KB</span>
+              <a href="#" onclick="event.preventDefault();window.open('${esc(f.url)}','_blank')">Ver</a>
+              <a href="#" onclick="event.preventDefault();removeSoporte('${ctx}','${esc(record.cedula)}','${s.key}','${esc(f.id)}')" style="color:var(--danger)">Eliminar</a>
+            </div>`).join("") : `<div class="desc" style="color:var(--ink-muted)">Sin archivos subidos</div>`}
+        </div>
+        <label class="btn btn-secondary btn-sm upload-label">
+          + Agregar archivo
+          <input type="file" accept="image/*,.pdf,application/pdf" style="display:none" onchange="handleSoporteUpload(event,'${ctx}','${esc(record.cedula)}','${s.key}')">
+        </label>
+      </div>`;
+    }).join("")}
+    </div>
+    <div id="soporte-error-${ctx}"></div>
+  </fieldset>`;
+}
+
+async function handleSoporteUpload(event, ctx, cedula, categoria){
+  const file = event.target.files && event.target.files[0];
+  if(!file) return;
+  const errBox = document.getElementById(`soporte-error-${ctx}`);
+  if(file.size > MAX_SCAN_BYTES){
+    if(errBox) errBox.innerHTML = `<div class="error-msg">"${esc(file.name)}" pesa ${(file.size/1024/1024).toFixed(1)} MB. El máximo permitido es 4 MB.</div>`;
+    event.target.value = "";
+    return;
+  }
+  if(errBox) errBox.innerHTML = `<div class="hint">Subiendo "${esc(file.name)}"…</div>`;
+  let dataUrl;
+  try{ dataUrl = await fileToDataURL(file); }
+  catch(e){ if(errBox) errBox.innerHTML = `<div class="error-msg">No se pudo leer el archivo.</div>`; return; }
+
+  let res;
+  try{ res = await gsRun('guardarSoporte', cedula, categoria, dataUrl, file.name, file.type||"application/octet-stream"); }
+  catch(e){ res = {ok:false}; }
+  if(!res || !res.ok){
+    if(errBox) errBox.innerHTML = `<div class="error-msg">${esc((res && res.msg) || "No se pudo subir el archivo. Intenta de nuevo.")}</div>`;
+    return;
+  }
+  if(errBox) errBox.innerHTML = "";
+  const meta = {id:res.id, nombre:res.nombre, tipo:res.tipo, fecha:res.fecha, tamano:res.tamano, url:res.url};
+
+  if(ctx==="staff" && state.record && state.record.cedula===cedula){
+    state.record.soportes = state.record.soportes || {};
+    state.record.soportes[categoria] = state.record.soportes[categoria] || [];
+    state.record.soportes[categoria].push(meta);
+    await saveRecord(state.record);
+  }else{
+    let rec = state.adminList.find(r=>r.cedula===cedula) || await loadRecord(cedula);
+    if(rec){
+      rec.soportes = rec.soportes || {};
+      rec.soportes[categoria] = rec.soportes[categoria] || [];
+      rec.soportes[categoria].push(meta);
+      await saveRecord(rec);
+      const idx = state.adminList.findIndex(r=>r.cedula===cedula);
+      if(idx>=0) state.adminList[idx] = rec; else state.adminList.push(rec);
+    }
+  }
+  render();
+}
+
+async function removeSoporte(ctx, cedula, categoria, fileId){
+  if(!confirm("¿Eliminar este archivo?")) return;
+  try{ await gsRun('eliminarSoporte', fileId); }catch(e){}
+  if(ctx==="staff" && state.record && state.record.cedula===cedula){
+    state.record.soportes[categoria] = (state.record.soportes[categoria]||[]).filter(f=>f.id!==fileId);
+    await saveRecord(state.record);
+  }else{
+    let rec = state.adminList.find(r=>r.cedula===cedula);
+    if(rec){
+      rec.soportes[categoria] = (rec.soportes[categoria]||[]).filter(f=>f.id!==fileId);
+      await saveRecord(rec);
+    }
+  }
+  render();
+}
+
+function afterRender(){ /* reserved for post-render hooks */ }
+
+/* Init */
+go("landing");
+
+</script>
+</body>
+</html>
