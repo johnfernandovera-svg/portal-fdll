@@ -334,7 +334,7 @@ function normalizeRecord(r){
 }
 
 /* ---------------- Storage helpers (Google Apps Script como API vía fetch) ---------------- */
-const API_URL = "PON_AQUI_TU_URL_DE_APPS_SCRIPT/exec"; // <-- reemplaza esto con tu URL real (termina en /exec)
+const API_URL = "https://script.google.com/macros/s/AKfycbwaMhhpekure6Q1x4MIybW1SxmioNxiENHLg3i23Qm66N0k5y8x5PGpaSgP8wJFzNKl/exec"; // <-- reemplaza esto con tu URL real (termina en /exec)
 
 function gsRun(fnName, ...args){
   return fetch(API_URL, {
