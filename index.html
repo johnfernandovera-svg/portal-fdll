@@ -301,6 +301,7 @@ function emptyRecord(cedula){
     identidad:{ nombresApellidos:"", tipoPersonal:"", cargoEspecifico:"", correoInstitucional:"", celular:"" },
     hojaVida:{
       perfilProfesional:"", nacionalidad:"Ecuatoriana", estadoCivil:"", telConvencional:"", telCelular:"", correoPersonal:"",
+      discapacidad:"", tipoSangre:"",
       ciudad:"", parroquia:"", barrio:"", sector:"", callePrincipal:"", calleSecundaria:"", numeroCasa:"", referenciaUbicacion:"",
       eduSuperior:[{titulo:"",institucion:"",senescyt:"",anio:""}],
       eduSecundaria:{titulo:"",institucion:"",anio:""},
@@ -331,6 +332,8 @@ function normalizeRecord(r){
     const sup = r.hojaVida.eduSuperior;
     if(sup && !Array.isArray(sup)) r.hojaVida.eduSuperior = [sup];
     if(!sup) r.hojaVida.eduSuperior = [{titulo:"",institucion:"",senescyt:"",anio:""}];
+    if(r.hojaVida.discapacidad===undefined) r.hojaVida.discapacidad = "";
+    if(r.hojaVida.tipoSangre===undefined) r.hojaVida.tipoSangre = "";
   }
   return r;
 }
@@ -396,6 +399,7 @@ function render(){
     case "admin-gate": html += screenAdminGate(); break;
     case "admin-dashboard": html += screenAdminDashboard(); break;
     case "admin-detail": html += screenAdminDetail(); break;
+    case "admin-edit": html += screenAdminEdit(); break;
     default: html += screenLanding();
   }
   app.innerHTML = html;
@@ -479,14 +483,8 @@ function screenStaffStep(){
   </div>`;
 }
 
-function stepIdentidad(){
-  const r = state.cedulaInput || {cedula:"",nombresApellidos:"",tipoPersonal:"",cargoEspecifico:"",correoInstitucional:"",celular:""};
+function fieldsIdentidad(r){
   return `
-  <div class="card">
-    <div class="eyebrow">Paso 1 de 6</div>
-    <h2 style="margin-top:0">¿Quién eres?</h2>
-    <p class="hero-lead" style="margin-bottom:18px">Ingresa tu cédula para comenzar tus documentos o continuar donde los dejaste. No necesitas usuario ni contraseña.</p>
-    <div id="id-error"></div>
     <div class="grid2">
       <div class="field"><label class="req">Cédula de ciudadanía o pasaporte</label>
         <input type="text" id="f-cedula" maxlength="20" value="${esc(r.cedula)}" placeholder="Ej. 1712345678" oninput="this.value=this.value.toUpperCase()">
@@ -511,6 +509,17 @@ function stepIdentidad(){
       <div class="field"><label>Celular personal</label>
         <input type="tel" id="f-celular" value="${esc(r.celular)}" placeholder="09XXXXXXXX"></div>
     </div>
+  `;
+}
+function stepIdentidad(){
+  const r = state.cedulaInput || {cedula:"",nombresApellidos:"",tipoPersonal:"",cargoEspecifico:"",correoInstitucional:"",celular:""};
+  return `
+  <div class="card">
+    <div class="eyebrow">Paso 1 de 6</div>
+    <h2 style="margin-top:0">¿Quién eres?</h2>
+    <p class="hero-lead" style="margin-bottom:18px">Ingresa tu cédula para comenzar tus documentos o continuar donde los dejaste. No necesitas usuario ni contraseña.</p>
+    <div id="id-error"></div>
+    ${fieldsIdentidad(r)}
     <div class="btn-row">
       <span></span>
       <button class="btn btn-primary" onclick="startOrResume()">Comenzar / Continuar →</button>
@@ -567,14 +576,9 @@ async function startOrResume(){
   }
 }
 
-function stepHojaVida(){
-  const hv = state.record.hojaVida;
+function fieldsHojaVida(hv){
   const exp = hv.experiencia;
   return `
-  <div class="card">
-    <div class="eyebrow">Paso 2 de 6 · Documento 1</div>
-    <h2 style="margin-top:0">Hoja de Vida</h2>
-
     <fieldset><legend>I. Perfil profesional</legend>
       <div class="field"><label>Breve resumen profesional, fortalezas y objetivo laboral</label>
         <textarea id="hv-perfil" rows="3">${esc(hv.perfilProfesional)}</textarea></div>
@@ -592,6 +596,17 @@ function stepHojaVida(){
         <div class="field"><label>Teléfono convencional</label><input type="tel" id="hv-telconv" value="${esc(hv.telConvencional)}"></div>
         <div class="field"><label>Teléfono celular</label><input type="tel" id="hv-telcel" value="${esc(hv.telCelular)}"></div>
         <div class="field"><label>Correo electrónico personal</label><input type="email" id="hv-correopers" value="${esc(hv.correoPersonal)}"></div>
+      </div>
+      <div class="grid2">
+        <div class="field"><label>¿Tienes alguna discapacidad?</label>
+          <div class="radio-row">
+            <label class="radio-opt"><input type="radio" name="hv-discapacidad" value="Sí" ${hv.discapacidad==="Sí"?"checked":""}> Sí</label>
+            <label class="radio-opt"><input type="radio" name="hv-discapacidad" value="No" ${hv.discapacidad==="No"?"checked":""}> No</label>
+          </div></div>
+        <div class="field"><label>Tipo de sangre</label>
+          <select id="hv-tiposangre">
+            ${["","A+","A-","B+","B-","AB+","AB-","O+","O-"].map(o=>`<option value="${o}" ${hv.tipoSangre===o?'selected':''}>${o||"—"}</option>`).join("")}
+          </select></div>
       </div>
     </fieldset>
 
@@ -719,7 +734,16 @@ function stepHojaVida(){
       <label class="consent-accept"><input type="checkbox" id="hv-consent" ${hv.consentimientoLopdp?'checked':''}>
         <span>Autorizo el tratamiento de los datos de mi Hoja de Vida conforme a lo descrito.</span></label>
     </fieldset>
+  `;
+}
 
+function stepHojaVida(){
+  const hv = state.record.hojaVida;
+  return `
+  <div class="card">
+    <div class="eyebrow">Paso 2 de 6 · Documento 1</div>
+    <h2 style="margin-top:0">Hoja de Vida</h2>
+    ${fieldsHojaVida(hv)}
     <div id="hv-error"></div>
     <div class="btn-row">
       <button class="btn btn-secondary" onclick="saveAndGo(1,0)">← Atrás</button>
@@ -757,6 +781,9 @@ function collectHojaVida(){
   hv.telConvencional = g("hv-telconv").value;
   hv.telCelular = g("hv-telcel").value;
   hv.correoPersonal = g("hv-correopers").value;
+  const discEl = document.querySelector('input[name="hv-discapacidad"]:checked');
+  hv.discapacidad = discEl ? discEl.value : "";
+  hv.tipoSangre = g("hv-tiposangre").value;
   hv.ciudad = g("hv-ciudad").value;
   hv.parroquia = g("hv-parroquia").value;
   hv.barrio = g("hv-barrio").value;
@@ -789,8 +816,7 @@ function collectHojaVida(){
 }
 
 
-function stepActa(){
-  const a = state.record.acta;
+function fieldsActa(a, tipoPersonal){
   const compromisos = [
 "Acogeré el carisma «Adorar, Reparar y Servir» de nuestra madre fundadora María Francisca de las Llagas en mis actividades diarias.",
 "Autorizo ser notificado en trámites institucionales a través de mi correo institucional y avisos por WhatsApp a mi número personal.",
@@ -816,10 +842,7 @@ function stepActa(){
 "Declaro conocer que mis datos personales serán tratados por la Institución exclusivamente para el control laboral, la seguridad institucional y la ejecución del contrato de trabajo, conforme a la LOPDP."
   ];
   return `
-  <div class="card">
-    <div class="eyebrow">Paso 5 de 6 · Documento 4</div>
-    <h2 style="margin-top:0">Acta de Compromiso para Personal Institucional</h2>
-    <p class="hero-lead">Como <strong>${esc(state.record.identidad.tipoPersonal)}</strong> de la Unidad Educativa Particular "Francisca de las Llagas", acepto lo prescrito en el Código de Convivencia, el PEI, el Reglamento Interno, el Reglamento de Higiene y Seguridad y demás normativa institucional.</p>
+    <p class="hero-lead">Como <strong>${esc(tipoPersonal)}</strong> de la Unidad Educativa Particular "Francisca de las Llagas", acepto lo prescrito en el Código de Convivencia, el PEI, el Reglamento Interno, el Reglamento de Higiene y Seguridad y demás normativa institucional.</p>
 
     <fieldset><legend>Datos de notificación</legend>
       <div class="grid2">
@@ -835,7 +858,16 @@ function stepActa(){
       <label class="consent-accept"><input type="checkbox" id="ac-accept" ${a.acepta?'checked':''}>
         <span>He leído y acepto libre y voluntariamente los 22 compromisos institucionales anteriores.</span></label>
     </fieldset>
+  `;
+}
 
+function stepActa(){
+  const a = state.record.acta;
+  return `
+  <div class="card">
+    <div class="eyebrow">Paso 5 de 6 · Documento 4</div>
+    <h2 style="margin-top:0">Acta de Compromiso para Personal Institucional</h2>
+    ${fieldsActa(a, state.record.identidad.tipoPersonal)}
     <div id="ac-error"></div>
     <div class="btn-row">
       <button class="btn btn-secondary" onclick="saveAndGo(4,3)">← Atrás</button>
@@ -851,17 +883,17 @@ function collectActa(){
   if(a.acepta) a.fecha = todayISO();
 }
 
-function stepAviso(){
-  const av = state.record.aviso;
+function fieldsAviso(av, opts){
+  opts = opts || {};
+  const cargoVal = av.cargo || (state.record.identidad && state.record.identidad.cargoEspecifico) || '';
   return `
-  <div class="card">
-    <div class="eyebrow">Paso 3 de 6 · Documento 2</div>
-    <h2 style="margin-top:0">Aviso de Privacidad</h2>
     <p class="hero-lead">Sobre el tratamiento de datos personales del personal de la Unidad Educativa Particular "Francisca de las Llagas", año lectivo 2026–2027.</p>
 
     <div class="field"><label>Cargo</label>
-      <input type="text" id="av-cargo" value="${esc(av.cargo || (state.record.identidad && state.record.identidad.cargoEspecifico) || '')}" disabled style="background:var(--bg-alt);color:var(--ink-muted)">
-      <div class="hint">Definido en el Paso 1 (Identificación) según tu tipo de personal.</div></div>
+      ${opts.editableCargo
+        ? `<input type="text" id="av-cargo" value="${esc(cargoVal)}">`
+        : `<input type="text" id="av-cargo" value="${esc(cargoVal)}" disabled style="background:var(--bg-alt);color:var(--ink-muted)">
+      <div class="hint">Definido en el Paso 1 (Identificación) según tu tipo de personal.</div>`}</div>
 
     <fieldset><legend>Resumen del Aviso de Privacidad</legend>
       <div class="consent-box" style="max-height:230px">
@@ -870,7 +902,15 @@ function stepAviso(){
       <label class="consent-accept"><input type="checkbox" id="av-accept" ${av.acepta?'checked':''}>
         <span>He leído y comprendido el Aviso de Privacidad y otorgo mi consentimiento para el tratamiento de mis datos personales conforme a lo descrito.</span></label>
     </fieldset>
-
+  `;
+}
+function stepAviso(){
+  const av = state.record.aviso;
+  return `
+  <div class="card">
+    <div class="eyebrow">Paso 3 de 6 · Documento 2</div>
+    <h2 style="margin-top:0">Aviso de Privacidad</h2>
+    ${fieldsAviso(av)}
     <div id="av-error"></div>
     <div class="btn-row">
       <button class="btn btn-secondary" onclick="saveAndGo(2,1)">← Atrás</button>
@@ -885,12 +925,8 @@ function collectAviso(){
   if(av.acepta) av.fecha = todayISO();
 }
 
-function stepConsentimiento(){
-  const c = state.record.consentimiento;
+function fieldsConsentimiento(c){
   return `
-  <div class="card">
-    <div class="eyebrow">Paso 4 de 6 · Documento 3</div>
-    <h2 style="margin-top:0">Consentimiento Informado</h2>
     <p class="hero-lead">Para el tratamiento de datos personales, control biométrico (asistencia) y videovigilancia laboral, conforme al Art. 66 num. 19 de la Constitución y los Arts. 7, 8 y 12 de la LOPDP.</p>
 
     <fieldset><legend>Resumen</legend>
@@ -913,7 +949,15 @@ function stepConsentimiento(){
           <label class="radio-opt"><input type="radio" name="ci-salud" value="No" ${c.autorizaSalud==="No"?"checked":""}> No autorizo</label>
         </div></div>
     </fieldset>
-
+  `;
+}
+function stepConsentimiento(){
+  const c = state.record.consentimiento;
+  return `
+  <div class="card">
+    <div class="eyebrow">Paso 4 de 6 · Documento 3</div>
+    <h2 style="margin-top:0">Consentimiento Informado</h2>
+    ${fieldsConsentimiento(c)}
     <div id="ci-error"></div>
     <div class="btn-row">
       <button class="btn btn-secondary" onclick="saveAndGo(3,2)">← Atrás</button>
@@ -1181,6 +1225,7 @@ function screenAdminDetail(){
         <div class="hint">Cédula ${esc(r.cedula)} · Última actualización ${esc(r.meta.actualizado)} · ${r.meta.completo?'<span class="badge ok">Completo</span>':'<span class="badge pending">Incompleto</span>'}</div>
       </div>
       <div style="display:flex;gap:8px">
+        <button class="btn btn-secondary btn-sm" onclick="openAdminEdit('${esc(r.cedula)}')">Editar todos los datos</button>
         <button class="btn btn-pine btn-sm" onclick="go('print-doc',{printCedula:'${esc(r.cedula)}'})">Imprimir documentos</button>
         <button class="btn btn-danger btn-sm" onclick="deleteFromAdmin('${esc(r.cedula)}')">Eliminar registro</button>
       </div>
@@ -1197,6 +1242,116 @@ async function deleteFromAdmin(cedula){
   go("admin-dashboard");
 }
 
+/* ================= EDICIÓN ADMINISTRATIVA (todos los campos, incluida la cédula) ================= */
+function openAdminEdit(cedula){
+  const r = state.adminList.find(x=>x.cedula===cedula);
+  if(!r) return;
+  // Copia profunda para editar sin afectar la lista hasta guardar
+  state.record = JSON.parse(JSON.stringify(r));
+  state.adminEditOriginalCedula = cedula;
+  go("admin-edit");
+}
+
+function screenAdminEdit(){
+  const r = state.record;
+  if(!r) return `<div class="card">No hay registro cargado. <button class="btn btn-secondary" onclick="go('admin-dashboard')">Volver</button></div>`;
+  const identidadLike = {
+    cedula: r.cedula,
+    nombresApellidos: r.identidad.nombresApellidos,
+    tipoPersonal: r.identidad.tipoPersonal,
+    cargoEspecifico: r.identidad.cargoEspecifico,
+    correoInstitucional: r.identidad.correoInstitucional,
+    celular: r.identidad.celular
+  };
+  return `
+  <div class="card no-print">
+    <button class="btn btn-secondary btn-sm" onclick="go('admin-detail',{adminDetailCedula:'${esc(state.adminEditOriginalCedula)}'})">← Cancelar y volver</button>
+    <div class="eyebrow" style="margin-top:16px">Edición administrativa</div>
+    <h2 style="margin-top:0">${esc(r.identidad.nombresApellidos)}</h2>
+    <p class="hero-lead">Puedes corregir cualquier dato de los 4 documentos, incluida la cédula. Los cambios se guardan solo cuando presionas "Guardar todos los cambios" al final.</p>
+    <div id="admedit-error"></div>
+  </div>
+
+  <div class="card">
+    <div class="eyebrow">Identificación</div>
+    ${fieldsIdentidad(identidadLike)}
+  </div>
+
+  <div class="card">
+    <div class="eyebrow">Documento 1 · Hoja de Vida</div>
+    ${fieldsHojaVida(r.hojaVida)}
+  </div>
+
+  <div class="card">
+    <div class="eyebrow">Documento 2 · Aviso de Privacidad</div>
+    ${fieldsAviso(r.aviso, {editableCargo:true})}
+  </div>
+
+  <div class="card">
+    <div class="eyebrow">Documento 3 · Consentimiento Informado</div>
+    ${fieldsConsentimiento(r.consentimiento)}
+  </div>
+
+  <div class="card">
+    <div class="eyebrow">Documento 4 · Acta de Compromiso</div>
+    ${fieldsActa(r.acta, r.identidad.tipoPersonal)}
+  </div>
+
+  <div class="card no-print">
+    <div id="admedit-error2"></div>
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="go('admin-detail',{adminDetailCedula:'${esc(state.adminEditOriginalCedula)}'})">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveAdminEdit()">Guardar todos los cambios</button>
+    </div>
+  </div>`;
+}
+
+async function saveAdminEdit(){
+  const errBox = document.getElementById("admedit-error2") || document.getElementById("admedit-error");
+  const cedulaEl = document.getElementById("f-cedula");
+  const nombresEl = document.getElementById("f-nombres");
+  const tipoEl = document.querySelector('input[name="tipo"]:checked');
+  const cargoEl = document.getElementById("f-cargo");
+
+  if(!cedulaEl.value.trim() || !nombresEl.value.trim() || !tipoEl){
+    if(errBox) errBox.innerHTML = `<div class="error-msg">Completa al menos cédula, nombres y tipo de personal.</div>`;
+    return;
+  }
+
+  const nuevaCedula = cedulaEl.value.trim().replace(/[^0-9A-Za-z]/g,"").toUpperCase();
+  const r = state.record;
+  r.cedula = nuevaCedula;
+  r.identidad.nombresApellidos = nombresEl.value.trim();
+  r.identidad.tipoPersonal = tipoEl.value;
+  r.identidad.cargoEspecifico = cargoEl ? cargoEl.value : "";
+  r.identidad.correoInstitucional = document.getElementById("f-correoinst").value.trim();
+  r.identidad.celular = document.getElementById("f-celular").value.trim();
+
+  try{ collectHojaVida(); }catch(e){ console.error(e); }
+  try{ collectAviso(); }catch(e){ console.error(e); }
+  try{ collectConsentimiento(); }catch(e){ console.error(e); }
+  try{ collectActa(); }catch(e){ console.error(e); }
+
+  r.meta.completo = isRecordComplete(r);
+
+  const original = state.adminEditOriginalCedula;
+  let res;
+  try{
+    res = await gsRun('actualizarEmpleadoAdmin', original, r);
+  }catch(e){
+    res = {ok:false, msg:"No se pudo conectar con el servidor."};
+  }
+  if(!res || !res.ok){
+    if(errBox) errBox.innerHTML = `<div class="error-msg">${esc((res&&res.msg)||"No se pudo guardar. Intenta de nuevo.")}</div>`;
+    return;
+  }
+
+  // Actualizar la lista local del panel
+  const idx = state.adminList.findIndex(x=>x.cedula===original);
+  if(idx>=0) state.adminList[idx] = r; else state.adminList.push(r);
+  go("admin-detail",{adminDetailCedula:r.cedula});
+}
+
 function renderDocPreview(r){
   const hv = r.hojaVida;
   return `
@@ -1204,6 +1359,8 @@ function renderDocPreview(r){
     <div class="kv">
       <div class="k">Nacionalidad</div><div class="v">${blank(hv.nacionalidad)}</div>
       <div class="k">Estado civil</div><div class="v">${blank(hv.estadoCivil)}</div>
+      <div class="k">Discapacidad</div><div class="v">${blank(hv.discapacidad)}</div>
+      <div class="k">Tipo de sangre</div><div class="v">${blank(hv.tipoSangre)}</div>
       <div class="k">Domicilio</div><div class="v">${blank([hv.callePrincipal,hv.calleSecundaria,hv.barrio,hv.ciudad].filter(Boolean).join(", "))}</div>
       <div class="k">Formación superior</div><div class="v">${blank(hv.eduSuperior.map(s=>[s.titulo,s.institucion].filter(Boolean).join(" — ")).filter(Boolean).join("; "))}</div>
       <div class="k">Idiomas</div><div class="v">${blank(hv.idiomas)}</div>
@@ -1286,6 +1443,8 @@ function printHojaVida(r){
       <div class="k">Teléfono convencional</div><div class="v">${blank(hv.telConvencional)}</div>
       <div class="k">Teléfono celular</div><div class="v">${blank(hv.telCelular)}</div>
       <div class="k">Correo personal</div><div class="v">${blank(hv.correoPersonal)}</div>
+      <div class="k">Discapacidad</div><div class="v">${blank(hv.discapacidad)}</div>
+      <div class="k">Tipo de sangre</div><div class="v">${blank(hv.tipoSangre)}</div>
     </div>
 
     <h4>III. Dirección exacta del domicilio</h4>
